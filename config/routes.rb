@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'home/index'
   # ユーザーの認証にDeviseを使用
   devise_for :users
 
@@ -8,7 +9,9 @@ Rails.application.routes.draw do
   # ヘルスチェックのルートを追加
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # ルートパスを設定 (タスクのインデックスにリダイレクト)
-  root "tasks#index"
+  root "home#index" # トップページ
+
+  # ホーム画面へのルートを追加
+  get 'home', to: 'home#home', as: :home 
 end
 
