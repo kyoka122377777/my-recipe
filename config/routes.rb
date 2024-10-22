@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # ユーザーの認証にDeviseを使用
+  devise_for :users
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  # タスクに関するルートを定義
+  resources :tasks
+
+  # ヘルスチェックのルートを追加
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # ルートパスを設定 (タスクのインデックスにリダイレクト)
+  root "tasks#index"
 end
+
