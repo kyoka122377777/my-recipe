@@ -1,0 +1,13 @@
+<%= form_with(url: sessions_path, local: true) do |form| %>
+  <%= form.label :email, t('session.email') %>
+  <%= form.email_field :email, name: "session[email]" %>
+
+  <%= form.label :password, t('session.password') %>
+  <%= form.password_field :password, name: "session[password]" %>
+
+  <%= form.submit t('session.submit') %>
+<% end %>
+
+<% if flash.now[:alert] %>
+  <div class="alert alert-danger"><%= flash.now[:alert] %></div>
+<% end %>

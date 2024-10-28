@@ -1,17 +1,24 @@
 Rails.application.routes.draw do
-  get 'home/index'
-  # ユーザーの認証にDeviseを使用
-  devise_for :users
+  # トップページのルーティング
+  root 'welcome#index'
 
-  # タスクに関するルートを定義
-  resources :tasks
+  # ユーザーセッションのルーティング
+  get '/login', to: 'sessions#new', as: :login
+  post '/sessions', to: 'sessions#create', as: :sessions
+  delete '/logout', to: 'sessions#destroy', as: :logout
 
-  # ヘルスチェックのルートを追加
-  get "up" => "rails/health#show", as: :rails_health_check
+  # ユーザー関連のルーティング
+  resources :users, only: [:new, :create, :show, :edit, :update]
+  resource :account, only: [:show, :edit, :update], controller: 'users'
 
-  root "home#index" # トップページ
+  # レシピ関連のルーティング
+  resources :recipes do
+    collection do
+      get :search  # ここで search アクションを定義
+    end
+  end
 
-  # ホーム画面へのルートを追加
-  get 'home', to: 'home#home', as: :home 
+  # その他のルーティング
+  get 'home/index', to: 'home#index', as: :home
+  get '/confirm_email', to: 'users#confirm_email', as: :confirm_email
 end
-

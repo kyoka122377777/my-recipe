@@ -1,9 +1,13 @@
 class HomeController < ApplicationController
-  def index # トップページ用のアクション
-    
+  before_action :authenticate_user!
+
+  def index
+    @recipes = Recipe.where(user_id: current_user.id) if current_user
   end
 
-  def home # ホーム画面用のアクション
-    #@tasks = Task.all
+  private
+
+  def authenticate_user!
+    redirect_to login_path unless session[:user_id]
   end
 end

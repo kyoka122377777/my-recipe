@@ -1,14 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>MyRecipe</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  </head>
+<head>
+  <title>MyRecipe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+</head>
+<body>
+  <!-- ヘッダー -->
+  <header class="header">
+    <h1 class="header-title">
+      <%= link_to image_tag("diary.png", alt: "シンボルマーク", class: "symbol-image"), current_user ? home_path : root_path %>
+      my-recipe
+    </h1>
 
-  <body>
-    <%= yield %>
-  </body>
+    <div class="header-icons">
+      <% if session[:user_id] %>
+        <%= link_to new_recipe_path, class: "icon-link" do %>
+          <i class="fa fa-plus"></i> <!-- プラスアイコン -->
+        <% end %>
+        
+        <%= link_to account_path, class: "icon-link" do %>
+          <i class="fa fa-user"></i> <!-- ユーザーアイコン -->
+        <% end %>
+        
+        <%= link_to t('logout'), logout_path, method: :delete, class: 'icon-link' %>
+      <% else %>
+        <%= link_to t('login'), login_path, class: 'icon-link' %>
+        <%= link_to t('signup'), new_user_path, class: 'icon-link' %>
+      <% end %>
+    </div>
+
+    <div class="language-selector">
+      <div class="dropdown">
+        <button class="dropbtn"><%= t('select_language') %></button>
+        <div class="dropdown-content">
+          <%= link_to 'English', url_for(locale: 'en'), class: "language-link" %>
+          <%= link_to '日本語', url_for(locale: 'ja'), class: "language-link" %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- フラッシュメッセージの表示 -->
+  <div class="flash-messages">
+    <% flash.each do |type, message| %>
+      <div class="flash <%= type %>"><%= message %></div>
+    <% end %>
+  </div>
+
+  <main>
+    <%= yield %> <!-- メインコンテンツ -->
+  </main>
+</body>
 </html>

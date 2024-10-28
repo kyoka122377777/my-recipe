@@ -1,0 +1,49 @@
+<%= form_with(model: @recipe, local: true) do |form| %>
+  <%= form.hidden_field :user_id, value: current_user.id %> 
+
+  <div>
+    <%= form.label :title, t('title') %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description, t('description') %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div id="quantities">
+    <% @recipe.quantities.each do |quantity| %>
+      <div class="quantity-fields">
+        <%= form.label "ingredient_name", t('ingredient_name') %>
+        <%= form.text_field "quantities_attributes[][ingredient_name]", value: quantity.ingredient_name %>
+
+        <%= form.label "amount_with_unit", t('amount_with_unit') %>
+        <%= form.text_field "quantities_attributes[][amount_with_unit]", value: quantity.amount_with_unit %>
+      </div>
+    <% end %>
+  </div>
+
+  <button type="button" id="add-quantity"><%= t('add_ingredient') %></button>
+
+  <div>
+    <%= form.label :images, t('recipe_images') %>
+    <%= form.file_field :images, multiple: true, accept: 'image/*', id: 'recipe_images' %>
+  </div>
+
+  <div id="preview-container"></div>
+  
+  <div>
+    <%= form.submit t('post') %>
+  </div>
+
+  <% if @recipe.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= t('errors.prohibited', count: @recipe.errors.count) %></h2>
+    <ul>
+      <% @recipe.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
+<% end %>

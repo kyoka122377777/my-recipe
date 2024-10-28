@@ -1,0 +1,107 @@
+ja:
+  welcome: "ようこそ、%{name}！"
+  login_success: "ログインが成功しました。"
+  recipes_title: "あなたのレシピ一覧"
+  no_recipes: "あなたのレシピはありません。"
+  no_image: "画像がありません。"
+  edit: "編集"
+  delete: "削除"
+  confirm_delete: "本当に削除しますか？"
+  back: "戻る"
+  language_selector: "言語を選択"
+  sessions:
+    create:
+      success: "ログインに成功しました。"
+
+  home:
+    index:
+      title: "ようこそ"
+      subtitle: "あなたのレシピ管理アプリへ"
+      new_user: "新規登録"
+      login: "ログイン"
+      greeting: "ようこそ、%{name}！"
+      welcome: "ようこそ"
+
+  logout:
+    confirm: "ログアウトしますか？"
+    success: "ログアウトしました！"
+
+  recipes:
+    edit: "編集"
+    delete: "削除"
+    confirm_delete: "本当に削除しますか？"
+    back: "戻る"
+    title: "あなたのレシピ一覧"
+    no_recipes: "あなたのレシピはありません。"
+    create:
+      success: "レシピが作成されました。"
+      no_image: "画像が添付されていません。"
+    update:
+      success: "レシピが更新されました。"
+    destroy:
+      success: "レシピが削除されました。"
+    recipe_images:
+      title: "画像"
+      no_images: "画像がありません。"
+    ingredients:
+      title: "材料"
+    no_ingredients: "材料がありません。"
+
+  edit_account: "アカウント編集"
+  update: "更新"
+  cancel: "キャンセル"
+  title: "タイトル"
+  description: "説明"
+  ingredient_name: "材料名"
+  amount_with_unit: "分量"
+  post: "投稿する"
+
+  errors:
+    prohibited: "%{count} 件のエラーが原因で、保存に失敗しました:"
+  
+  edit: "編集"
+  delete: "削除"
+  confirm_delete: "本当に削除しますか？"
+  back: "戻る"
+  language_selector: "言語を選択"
+
+  session:
+    email: "メールアドレス"
+    password: "パスワード"
+    submit: "ログイン"
+
+  shared:
+    error_message:
+      count: "エラー"
+      prohibited: "このリソースが保存されるのを妨げました"
+
+  users:
+    edit:
+      title: "アカウント編集"
+      heading: "アカウント編集"
+      name: "名前"
+      email: "メールアドレス"
+      password: "パスワード"
+      password_placeholder: "新しいパスワード"
+      password_confirmation: "新しいパスワード（確認）"
+      password_confirmation_placeholder: "新しいパスワード（確認）"
+      submit: "更新"
+      cancel: "キャンセル"
+    
+    new:
+      title: "新規登録"
+      name: "名前"
+      email: "メールアドレス"
+      password: "パスワード"
+      password_confirmation: "パスワード確認"
+      submit: "登録"
+    
+    show:
+      title: "アカウント管理"
+      heading: "ユーザー情報"
+      name: "名前"
+      email: "メールアドレス"
+      password: "パスワード"
+      edit: "編集"
+
+  logout: "ログアウト"

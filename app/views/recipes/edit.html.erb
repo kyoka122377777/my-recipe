@@ -1,0 +1,38 @@
+<%= form_with model: @recipe, local: true, html: { class: 'form-container' } do |form| %>
+  <% if @recipe.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= t('errors.prohibited', count: @recipe.errors.count) %></h2>
+      <ul>
+        <% @recipe.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ingredient_name %>
+    <%= form.text_field :ingredient_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount_with_unit %>
+    <%= form.text_field :amount_with_unit %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit t('update') %>
+    <%= link_to t('cancel'), recipes_path, class: 'button' %>
+  </div>
+<% end %>
+  

@@ -1,44 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>My Recipe</title>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
-  <%= csrf_meta_tags %>
-  <style>
-    /* 画像のスタイルを調整 */
-    .responsive-image {
-      max-width: 25%;  /* 画面幅に合わせて最大幅を設定 */
-      height: auto;      /* 高さを自動調整 */
-      margin-bottom: 20px; /* 画像と下の要素の間隔 */
-    }
-    body {
-      margin: 0; /* ボディのマージンをリセット */
-      padding: 0; /* ボディのパディングをリセット */
-    }
-    header {
-      background-color: #ffe6e6; 
-      padding: 20px; 
-      text-align: center;
-    }
-    main {
-      text-align: center; 
-      padding: 20px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>my-recipe</h1>
-  </header>
+<h1><%= t('welcome', name: current_user.name) if current_user %></h1>
+<p><%= t('login_success') %></p>
 
-  <main>
-    <%= image_tag "top.jpg", alt: "レシピのイメージ", class: 'responsive-image' %>
-    <p>ここにコメントを挿入します。レシピの管理が簡単になります！</p>
-    
+<h2><%= t('recipes_title') %></h2>
+
+<%= form_with url: search_recipes_path, method: :get, local: true do |form| %>
+  <div>
+    <%= form.label :query, "検索" %>
+    <%= form.text_field :query %>
+  </div>
+  <div>
+    <%= form.submit "検索" %>
+  </div>
+<% end %>
+
+<% if @recipes.any? %>
+  <% @recipes.each do |recipe| %>
     <div>
-      <%= link_to "新規会員登録", new_user_registration_path, class: "button-custom" %>
-      <%= link_to "ログイン", new_user_session_path, class: "button-custom" %>
+      <h2><%= link_to recipe.title, recipe_path(recipe) %></h2>
+      <p><%= recipe.description %></p>
+      
+      <% if recipe.images.attached? %>
+        <%= image_tag recipe.images.first, style: "width: 100px; height: auto;" %>
+      <% else %>
+        <p><%= t('no_image') %></p>
+      <% end %>
     </div>
-  </main>
-</body>
-</html>
+  <% end %>
+<% else %>
+  <p><%= t('no_recipes') %></p>
+<% end %>
+

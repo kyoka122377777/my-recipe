@@ -1,0 +1,17 @@
+💕<!DOCTYPE html>
+<html>
+<body>
+  <main>
+    <div class="welcome-main">
+      <p class="welcome-text"><%= t('welcome.title') %></p>
+      <p class="welcome-text"><%= t('welcome.subtitle') %></p>
+      <div class="button-container">
+        <%= link_to t('welcome.new_user'), new_user_path, class: "button-custom" %>
+        <%= link_to t('welcome.login'), login_path, class: "button-custom" %>
+      </div>
+    </div>
+
+    <%= image_tag "top.png", alt: "welcomeイメージ", class: 'top-image' %>
+  </main>
+</body>
+</html>

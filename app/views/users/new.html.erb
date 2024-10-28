@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <main>
+    <h1><%= t('users.new.title') %></h1>
+    <%= form_with model: @user, local: true do |form| %>
+      <% if @user.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@user.errors.count, t('shared.error_message.count')) %> <%= t('shared.error_message.prohibited') %>:</h2>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :name, t('users.new.name') %>
+        <%= form.text_field :name %>
+      </div>
+
+      <div class="field">
+        <%= form.label :email, t('users.new.email') %>
+        <%= form.email_field :email %>
+      </div>
+
+      <div class="field">
+        <%= form.label :password, t('users.new.password') %>
+        <%= form.password_field :password %>
+      </div>
+
+      <div class="field">
+        <%= form.label :password_confirmation, t('users.new.password_confirmation') %>
+        <%= form.password_field :password_confirmation %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit t('users.new.submit') %>
+      </div>
+    <% end %>
+  </main>
+</body>
+</html>

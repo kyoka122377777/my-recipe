@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= t('users.edit.title') %></title>
+</head>
+<body>
+  <main>
+    <h1><%= t('users.edit.heading') %></h1>
+
+    <%= form_with model: @user, local: true do |form| %>
+      <% if @user.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@user.errors.count, t('shared.error_message.count')) %> <%= t('shared.error_message.prohibited') %>:</h2>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :name, t('users.edit.name') %>
+        <%= form.text_field :name %>
+      </div>
+
+      <div class="field">
+        <%= form.label :email, t('users.edit.email') %>
+        <%= form.email_field :email %>
+      </div>
+
+      <div class="field">
+        <%= form.label :password, t('users.edit.password') %>
+        <%= form.password_field :password, placeholder: t('users.edit.password_placeholder') %>
+      </div>
+
+      <div class="field">
+        <%= form.label :password_confirmation, t('users.edit.password_confirmation') %>
+        <%= form.password_field :password_confirmation, placeholder: t('users.edit.password_confirmation_placeholder') %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit t('users.edit.submit') %>
+      </div>
+    <% end %>
+
+    <%= link_to t('users.edit.cancel'), account_path, class: 'button' %>
+  </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= t('users.show.title') %></title>
+</head>
+<body>
+  <main>
+    <h1><%= t('users.show.heading') %></h1>
+
+    <div>
+      <p><%= t('users.show.name') %>: <%= @user.name %></p>
+      <p><%= t('users.show.email') %>: <%= @user.email %></p>
+      <p><%= t('users.show.password') %>: *********（表示しません）</p>
+    </div>
+
+    <div>
+      <%= link_to t('users.show.edit'), edit_account_path, class: 'button' %>
+      <%= link_to t('users.show.logout'), logout_path, method: :delete, data: { confirm: t('users.show.logout.confirm') }, class: 'button' %>
+    </div>
+  </main>
+</body>
+</html>

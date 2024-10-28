@@ -1,33 +1,92 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   "true": "foo"
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  sessions:
+    create:
+      success: "Login was successful."
+
+  home:
+    index:
+      title: "Welcome"
+      subtitle: "Your Recipe Management App"
+      new_user: "Sign Up"
+      login: "Login"
+      greeting: "Welcome, %{name}!"
+
+  logout:
+    confirm: "Are you sure you want to log out?"
+    success: "You have logged out!"
+
+  recipes:
+    title: "Your Recipes List"
+    no_recipes: "You have no recipes."
+    create:
+      success: "Recipe has been created."
+      no_image: "No image attached."
+    update:
+      success: "Recipe has been updated."
+    destroy:
+      success: "Recipe has been deleted."
+    recipe_images:
+      title: "Images"
+      no_images: "No images available."
+    ingredients:
+      title: "Ingredients"
+    no_ingredients: "No ingredients available."
+
+  edit_account: "Edit Account"
+  update: "Update"
+  cancel: "Cancel"
+  title: "Title"
+  description: "Description"
+  ingredient_name: "Ingredient Name"
+  amount_with_unit: "Amount"
+  post: "Post"
+
+  errors:
+    prohibited: "%{count} errors prevented the user from being saved:"
+
+  edit: "Edit"
+  delete: "Delete"
+  confirm_delete: "Are you sure you want to delete?"
+  back: "Back"
+  language_selector: "Select Language"
+
+  session:
+    email: "Email"
+    password: "Password"
+    submit: "Login"
+
+  shared:
+    error_message:
+      count: "Error"
+      prohibited: "This resource could not be saved."
+
+  users:
+    edit:
+      title: "Edit Account"
+      heading: "Edit Account"
+      name: "Name"
+      email: "Email"
+      password: "Password"
+      password_placeholder: "New Password"
+      password_confirmation: "Confirm New Password"
+      password_confirmation_placeholder: "Confirm New Password"
+      submit: "Update"
+      cancel: "Cancel"
+
+    new:
+      title: "Sign Up"
+      name: "Name"
+      email: "Email"
+      password: "Password"
+      password_confirmation: "Confirm Password"
+      submit: "Register"
+
+    show:
+      title: "Account Management"
+      heading: "User Information"
+      name: "Name"
+      email: "Email"
+      password: "Password"
+      edit: "Edit"
+
+  logout: "Log Out"

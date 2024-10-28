@@ -1,0 +1,18 @@
+<h1>検索結果</h1>
+
+<%= form_with url: search_recipes_path, method: :get, local: true do |form| %>
+  <%= form.text_field :query, placeholder: '検索...' %>
+  <%= form.submit '検索' %>
+<% end %>
+
+<% if @recipes.any? %>
+  <ul>
+    <% @recipes.each do |recipe| %>
+      <li>
+        <%= link_to recipe.title, recipe_path(recipe) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>レシピが見つかりませんでした。</p>
+<% end %>
