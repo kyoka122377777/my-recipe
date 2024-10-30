@@ -1,8 +1,61 @@
 ja:
-  welcome: "ようこそ、%{name}！"
-  login_success: "ログインが成功しました。"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "メールアドレスを入力してください"
+              taken: "このメールアドレスは既に使用されています"
+            password_confirmation:
+              confirmation: "パスワード確認が一致しません"
+        recipe:
+          attributes:
+            title:
+              blank: "タイトルを入力してください" # 空の場合のエラーメッセージ
+            description:
+              blank: "説明を入力してください"
+            
+  errors:
+    messages:
+      blank: "入力必須です"
+      confirmation: "一致しません"
+      taken: "既に使用されています"
+  
+  add_ingredient: "入力欄の追加"
+  select_language: "言語を選択"
+  languages:
+    english: "英語"
+    japanese: "日本語"
+  login_success: "ログインが成功しました"
   recipes_title: "あなたのレシピ一覧"
-  no_recipes: "あなたのレシピはありません。"
+  no_recipes: "あなたのレシピはありません"
+  no_image: "画像がありません。"
+  edit: "編集"
+  delete: "削除"
+  confirm_delete: "本当に削除しますか？"
+  back: "戻る"
+  welcome:
+    title: "ようこそ"
+    subtitle: "あなたのレシピ管理アプリへ"
+    new_user: "新規登録"
+    login: "ログイン"
+    greeting: "ようこそ、%{name}！"
+    welcome: "ようこそ"
+    message: "ようこそ、%{name}！"
+    title: "my-recipe のコンセプトは私のお気に入りレシピノート"
+    subtitle: "お気に入りのレシピから献立を考えませんか？"
+    new_user: "サインアップ"
+  recipe:
+    ingredients:
+      title: "材料"
+    edit: "編集"
+    delete: "削除"
+    back: "戻る"
+    confirm: "削除を確認しますか？"  
+      
+  recipes_title: "あなたのレシピ一覧"
+  no_recipes: "あなたのレシピはありません"
   no_image: "画像がありません。"
   edit: "編集"
   delete: "削除"
@@ -10,50 +63,51 @@ ja:
   back: "戻る"
   language_selector: "言語を選択"
   sessions:
-    create:
-      success: "ログインに成功しました。"
-
-  home:
-    index:
-      title: "ようこそ"
-      subtitle: "あなたのレシピ管理アプリへ"
-      new_user: "新規登録"
-      login: "ログイン"
-      greeting: "ようこそ、%{name}！"
-      welcome: "ようこそ"
-
+    
+    destroy:
+      success: "ログアウトしました"
   logout:
     confirm: "ログアウトしますか？"
     success: "ログアウトしました！"
 
   recipes:
     edit: "編集"
-    delete: "削除"
+    delete:
     confirm_delete: "本当に削除しますか？"
     back: "戻る"
     title: "あなたのレシピ一覧"
-    no_recipes: "あなたのレシピはありません。"
+    no_recipes: "あなたのレシピはありません"
     create:
       success: "レシピが作成されました。"
-      no_image: "画像が添付されていません。"
+      no_image: "画像が添付されていません"
     update:
       success: "レシピが更新されました。"
     destroy:
       success: "レシピが削除されました。"
     recipe_images:
       title: "画像"
-      no_images: "画像がありません。"
+      no_images: "画像がありません"
     ingredients:
       title: "材料"
-    no_ingredients: "材料がありません。"
+    recipe:
+      no_ingredients: "材料がありません"
+      edit:
+        title: "タイトル"
+    edit:
+      title: "タイトル"
+      description: "作り方"
+      ingredient_name: "材料名"
+      amount_with_unit: "分量"
+      update: "更新"
+      cancel: "キャンセル"
 
-  edit_account: "アカウント編集"
-  update: "更新"
-  cancel: "キャンセル"
+  update: "更新？"
+  cancel: "キャンセル？"
   title: "タイトル"
-  description: "説明"
+  description: "作り方"
   ingredient_name: "材料名"
   amount_with_unit: "分量"
+  recipe_images: "画像を添付"
   post: "投稿する"
 
   errors:
@@ -69,7 +123,12 @@ ja:
     email: "メールアドレス"
     password: "パスワード"
     submit: "ログイン"
-
+  sessions:
+    create:
+      invalid_credentials: "無効なメールアドレスまたはパスワードです"
+      success: "ログインに成功しました。"
+    destroy:
+      success: "ログアウトしました"
   shared:
     error_message:
       count: "エラー"
@@ -87,10 +146,13 @@ ja:
       password_confirmation_placeholder: "新しいパスワード（確認）"
       submit: "更新"
       cancel: "キャンセル"
-    
+    shared:
+      error_message:
+        count: "エラー"
+        prohibited: "?このリソースが保存されるのを妨げました"
     new:
-      title: "新規登録"
-      name: "名前"
+      title: "会員登録"
+      name: "アカウント名"
       email: "メールアドレス"
       password: "パスワード"
       password_confirmation: "パスワード確認"
@@ -98,10 +160,11 @@ ja:
     
     show:
       title: "アカウント管理"
-      heading: "ユーザー情報"
+      heading: "アカウント"
       name: "名前"
       email: "メールアドレス"
       password: "パスワード"
       edit: "編集"
+      logout: "ログアウト"
 
   logout: "ログアウト"

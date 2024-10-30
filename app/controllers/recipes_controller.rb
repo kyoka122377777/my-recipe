@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: [:edit, :update, :destroy]
+  before_action :set_recipe, only: [:show, :edit, :update, :destroy]
 
   def index
     if params[:query].present?
@@ -24,7 +24,7 @@ class RecipesController < ApplicationController
       if @recipe.images.attached?
         redirect_to @recipe, notice: t('recipes.create.success') # i18n対応
       else
-        flash.now[:alert] = t('recipes.create.no_image') # i18n対応
+        #flash.now[:alert] = t('recipes.create.no_image') # i18n対応
         render :new
       end
     else
@@ -75,10 +75,19 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
+  # def recipe_params
+  #   params.require(:recipe).permit(:title, :description, images: [], quantities_attributes: [:id, :ingredient_name, :amount_with_unit, :_destroy])
+  # end
   def recipe_params
-    params.require(:recipe).permit(:title, :description, images: [], quantities_attributes: [:ingredient_name, :amount_with_unit])
+    params.require(:recipe).permit(:title, :description, images: [], 
+      quantities_attributes: [:id, :ingredient_name, :amount_with_unit, :_destroy]).tap do |whitelisted|
+        whitelisted[:quantities_attributes]&.each do |key, attributes|
+          if attributes[:ingredient_name].blank? && attributes[:amount_with_unit].blank?
+            attributes[:_destroy] = '1'
+          end
+        end
+    end
   end
-
   def create_tags(ingredient_names)
     ingredient_names.each do |ingredient_name|
       tag = Tag.find_or_create_by(name: ingredient_name)

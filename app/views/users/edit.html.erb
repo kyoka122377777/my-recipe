@@ -10,7 +10,6 @@
     <%= form_with model: @user, local: true do |form| %>
       <% if @user.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(@user.errors.count, t('shared.error_message.count')) %> <%= t('shared.error_message.prohibited') %>:</h2>
           <ul>
             <% @user.errors.full_messages.each do |message| %>
               <li><%= message %></li>

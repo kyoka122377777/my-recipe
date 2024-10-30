@@ -58,7 +58,12 @@ html, body {
   justify-content: flex-end;
   width: 100%;
 }
-
+.language-link {
+  color: #333;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: inline-block;
+}
 /* メインコンテンツの中央揃え */
 .main-content {
   display: flex;
@@ -146,11 +151,6 @@ html, body {
   display: block;
 }
 
-.language-link {
-  color: #333;
-  padding: 10px 15px;
-  text-decoration: none;
-}
 
 /* 共通のフォームスタイル */
 .form-container {

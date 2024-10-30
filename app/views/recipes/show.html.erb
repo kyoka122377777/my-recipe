@@ -2,7 +2,7 @@
 <p><%= @recipe.description %></p>
 
 <% if @recipe.images.attached? %>
-  <h2><%= t('recipe.images.title') %></h2>
+  
   <% @recipe.images.each do |image| %>
     <%= image_tag image, style: "width: 200px; height: auto;" %>
   <% end %>
@@ -22,6 +22,6 @@
 <% end %>
 
 <%= link_to t('recipe.edit'), edit_recipe_path(@recipe) %> |
-<%= link_to t('recipe.delete'), recipe_path(@recipe), method: :delete, data: { confirm: t('recipe.delete.confirm') } %>
+<%= link_to t('recipe.delete'), recipe_path(@recipe), method: :delete, data: { confirm: t('recipe.confirm') } %>
 <%= link_to t('recipe.back'), home_path %>
 

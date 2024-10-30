@@ -2,6 +2,11 @@ en:
   sessions:
     create:
       success: "Login was successful."
+  welcome:
+    title: "Welcome to the My Recipe!"
+    subtitle: "Why not plan a menu from your favorite recipes?"
+    new_user: "Sign Up"
+    login: "Login"
 
   home:
     index:
