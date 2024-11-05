@@ -22,6 +22,7 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
-    redirect_to root_path, notice: t('sessions.destroy.success') # i18n対応
+    redirect_to root_path, status: :see_other, notice: t('sessions.destroy.success')
+    #redirect_to root_path, notice: t('sessions.destroy.success') # i18n対応
   end
 end

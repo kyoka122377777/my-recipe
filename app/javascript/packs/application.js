@@ -1,3 +1,6 @@
+import 'bootstrap';
+import '../stylesheets/application';
+
 document.addEventListener("DOMContentLoaded", () => {
   const imageInput = document.getElementById('recipe_images'); // form.file_fieldで設定したID
   const previewContainer = document.getElementById('preview-container'); // プレビュー用の要素を準備
@@ -14,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fileReader.onload = (e) => {
           const img = document.createElement("img");
           img.src = e.target.result;
-          img.style.width = "100px"; // 必要に応じてサイズ調整
+          img.style.width = "50px"; // 必要に応じてサイズ調整
           img.style.height = "auto";
           previewContainer.appendChild(img);
         };

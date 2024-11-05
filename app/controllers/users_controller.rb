@@ -7,12 +7,20 @@ class UsersController < ApplicationController
   end
 
   def create
+    # @user = User.new(user_params)
+    # if @user.save
+    #   redirect_to home_path, notice: t('users.create.success') # i18n対応
+    # else
+    #   flash.now[:alert] = @user.errors.full_messages.join(", ") # エラーメッセージをフラッシュメッセージに設定
+    #   render :new
+    # end
     @user = User.new(user_params)
     if @user.save
+      session[:user_id] = @user.id  # ユーザーをサインイン状態にする
       redirect_to home_path, notice: t('users.create.success') # i18n対応
     else
       flash.now[:alert] = @user.errors.full_messages.join(", ") # エラーメッセージをフラッシュメッセージに設定
-      render :new
+    render :new
     end
   end
 

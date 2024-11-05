@@ -1,42 +1,45 @@
-<%= form_with model: @recipe, local: true, html: { class: 'form-container' } do |form| %>
-  <% if @recipe.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= t('errors.prohibited', count: @recipe.errors.count) %></h2>
-      <ul>
-        <% @recipe.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<div class="container">
+  <h1 class="my-4"><%= t('recipes.edit.title') %></h1>
+
+  <%= form_with model: @recipe, local: true, html: { class: 'form-container' } do |form| %>
+    <% if @recipe.errors.any? %>
+      <div id="error_explanation" class="alert alert-danger">
+        <h2><%= pluralize(@recipe.errors.count, t('errors.prohibited')) %></h2>
+        <ul>
+          <% @recipe.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= form.label :title, t('recipes.edit.title'), class: 'form-label' %>
+      <%= form.text_field :title, class: 'form-control' %>
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= form.label :title, t('recipes.edit.title') %>
-    <%= form.text_field :title %>
-  </div>
+    <div class="mb-3">
+      <%= form.label :description, t('recipes.edit.description'), class: 'form-label' %>
+      <%= form.text_area :description, class: 'form-control', rows: 5 %>
+    </div>
 
-  <div class="field">
-    <%= form.label :description, t('recipes.edit.description') %>
-    <%= form.text_area :description %>
-  </div>
+    <div id="quantities">
+      <% @recipe.quantities.each_with_index do |quantity, index| %>
+        <div class="quantity-fields mb-3">
+          <%= form.label "quantities_attributes[#{index}][ingredient_name]", t('ingredient_name'), class: 'form-label' %>
+          <%= form.text_field "quantities_attributes[#{index}][ingredient_name]", value: quantity.ingredient_name, class: 'form-control' %>
 
-  <div id="quantities">
-  <% @recipe.quantities.each_with_index do |quantity, index| %>
-    <div class="quantity-fields">
-      <%= form.label "quantities_attributes[#{index}][ingredient_name]", t('ingredient_name') %>
-      <%= form.text_field "quantities_attributes[#{index}][ingredient_name]", value: quantity.ingredient_name %>
+          <%= form.label "quantities_attributes[#{index}][amount_with_unit]", t('amount_with_unit'), class: 'form-label' %>
+          <%= form.text_field "quantities_attributes[#{index}][amount_with_unit]", value: quantity.amount_with_unit, class: 'form-control' %>
 
-      <%= form.label "quantities_attributes[#{index}][amount_with_unit]", t('amount_with_unit') %>
-      <%= form.text_field "quantities_attributes[#{index}][amount_with_unit]", value: quantity.amount_with_unit %>
+          <%= form.hidden_field "quantities_attributes[#{index}][id]", value: quantity.id %>
+        </div>
+      <% end %>
+    </div>
 
-      <!-- hidden_fieldを使ってIDを保持させる -->
-      <%= form.hidden_field "quantities_attributes[#{index}][id]", value: quantity.id %>
+    <div class="actions">
+      <%= form.submit t('recipes.edit.update'), class: 'btn btn-primary' %>
+      <%= link_to t('recipes.edit.cancel'), recipes_path, class: 'btn btn-secondary' %>
     </div>
   <% end %>
 </div>
-
-  <div class="actions">
-    <%= form.submit t('recipes.edit.update') %>
-    <%= link_to t('recipes.edit.cancel'), recipes_path, class: 'button' %>
-  </div>
-<% end %>

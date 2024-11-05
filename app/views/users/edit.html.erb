@@ -2,14 +2,18 @@
 <html>
 <head>
   <title><%= t('users.edit.title') %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
 </head>
 <body>
-  <main>
-    <h1><%= t('users.edit.heading') %></h1>
+  <main class="container mt-5">
+    <h1 class="mb-4"><%= t('users.edit.heading') %></h1>
 
     <%= form_with model: @user, local: true do |form| %>
       <% if @user.errors.any? %>
-        <div id="error_explanation">
+        <div class="alert alert-danger">
+          <h4><%= t('errors.prohibited', count: @user.errors.count) %></h4>
           <ul>
             <% @user.errors.full_messages.each do |message| %>
               <li><%= message %></li>
@@ -18,32 +22,34 @@
         </div>
       <% end %>
 
-      <div class="field">
-        <%= form.label :name, t('users.edit.name') %>
-        <%= form.text_field :name %>
+      <div class="mb-3">
+        <%= form.label :name, t('users.edit.name'), class: 'form-label' %>
+        <%= form.text_field :name, class: 'form-control' %>
       </div>
 
-      <div class="field">
-        <%= form.label :email, t('users.edit.email') %>
-        <%= form.email_field :email %>
+      <div class="mb-3">
+        <%= form.label :email, t('users.edit.email'), class: 'form-label' %>
+        <%= form.email_field :email, class: 'form-control' %>
       </div>
 
-      <div class="field">
-        <%= form.label :password, t('users.edit.password') %>
-        <%= form.password_field :password, placeholder: t('users.edit.password_placeholder') %>
+      <div class="mb-3">
+        <%= form.label :password, t('users.edit.password'), class: 'form-label' %>
+        <%= form.password_field :password, placeholder: t('users.edit.password_placeholder'), class: 'form-control' %>
       </div>
 
-      <div class="field">
-        <%= form.label :password_confirmation, t('users.edit.password_confirmation') %>
-        <%= form.password_field :password_confirmation, placeholder: t('users.edit.password_confirmation_placeholder') %>
+      <div class="mb-3">
+        <%= form.label :password_confirmation, t('users.edit.password_confirmation'), class: 'form-label' %>
+        <%= form.password_field :password_confirmation, placeholder: t('users.edit.password_confirmation_placeholder'), class: 'form-control' %>
       </div>
 
       <div class="actions">
-        <%= form.submit t('users.edit.submit') %>
+        <%= form.submit t('users.edit.submit'), class: 'btn btn-primary' %>
       </div>
     <% end %>
 
-    <%= link_to t('users.edit.cancel'), account_path, class: 'button' %>
+    <div class="mt-3">
+      <%= link_to t('users.edit.cancel'), account_path, class: 'btn btn-secondary' %>
+    </div>
   </main>
 </body>
 </html>

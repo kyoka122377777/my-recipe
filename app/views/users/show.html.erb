@@ -2,20 +2,25 @@
 <html>
 <head>
   <title><%= t('users.show.title') %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
 </head>
 <body>
-  <main>
-    <h1><%= t('users.show.heading') %></h1>
+  <main class="container mt-5">
+    <h1 class="mb-4"><%= t('users.show.heading') %></h1>
 
-    <div>
-      <p><%= t('users.show.name') %>: <%= @user.name %></p>
-      <p><%= t('users.show.email') %>: <%= @user.email %></p>
-      <p><%= t('users.show.password') %>: *********</p>
-    </div>
+    <div class="card">
+      <div class="card-body">
+        <p class="card-text"><strong><%= t('users.show.name') %>:</strong> <%= @user.name %></p>
+        <p class="card-text"><strong><%= t('users.show.email') %>:</strong> <%= @user.email %></p>
+        <p class="card-text"><strong><%= t('users.show.password') %>:</strong> *********</p>
 
-    <div>
-      <%= link_to t('users.show.edit'), edit_account_path, class: 'button' %>
-      <%= link_to t('users.show.logout'), logout_path, method: :delete, data: { confirm: t('users.show.logout.confirm') }, class: 'button' %>
+        <div class="mt-4">
+          <%= link_to t('users.show.edit'), edit_account_path, class: 'btn btn-primary' %>
+          <%= link_to 'ログアウト', logout_path, class: 'btn btn-link text-decoration-none', data: { turbo_method: :delete } %>
+        </div>
+      </div>
     </div>
   </main>
 </body>

@@ -1,27 +1,37 @@
-<h1><%= @recipe.title %></h1>
-<p><%= @recipe.description %></p>
+<h1 class="mt-4"><%= @recipe.title %></h1>
+<p class="lead"><%= @recipe.description %></p>
 
-<% if @recipe.images.attached? %>
-  
-  <% @recipe.images.each do |image| %>
-    <%= image_tag image, style: "width: 200px; height: auto;" %>
+<div class="mb-4">
+  <% if @recipe.images.attached? %>
+    <div class="row">
+      <% @recipe.images.each do |image| %>
+        <div class="col-md-4 mb-3">
+          <%= image_tag image, class: "img-fluid", style: "width: 50%; height: auto;" %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted"><%= t('recipe.images.no_images') %></p>
   <% end %>
-<% else %>
-  <p><%= t('recipe.images.no_images') %></p>
-<% end %>
+</div>
 
 <h2><%= t('recipe.ingredients.title') %></h2>
-<% if @recipe.quantities.any? %>
-  <ul>
-    <% @recipe.quantities.each do |quantity| %>
-      <li><%= quantity.amount_with_unit %> <%= quantity.ingredient_name %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p><%= t('recipe.ingredients.no_ingredients') %></p>
-<% end %>
+<div>
+  <% if @recipe.quantities.any? %>
+    <ul class="list-group">
+      <% @recipe.quantities.each do |quantity| %>
+        <li class="list-group-item">
+          <%= quantity.amount_with_unit %> <%= quantity.ingredient_name %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-muted"><%= t('recipe.ingredients.no_ingredients') %></p>
+  <% end %>
+</div>
 
-<%= link_to t('recipe.edit'), edit_recipe_path(@recipe) %> |
-<%= link_to t('recipe.delete'), recipe_path(@recipe), method: :delete, data: { confirm: t('recipe.confirm') } %>
-<%= link_to t('recipe.back'), home_path %>
-
+<div class="mt-4">
+  <%= link_to t('recipe.edit'), edit_recipe_path(@recipe), class: "btn btn-warning" %>
+  <%= link_to t('recipe.delete'), recipe_path(@recipe), method: :delete, data: { confirm: t('recipe.confirm') }, class: "btn btn-danger" %>
+  <%= link_to t('recipe.back'), home_path, class: "btn btn-secondary" %>
+</div>

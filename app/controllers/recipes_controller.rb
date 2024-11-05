@@ -1,5 +1,6 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :edit, :update, :destroy]
+  
 
   def index
     if params[:query].present?
@@ -16,19 +17,28 @@ class RecipesController < ApplicationController
     @recipe.quantities.build # 材料の入力フィールドを追加
   end
 
+  
+  # def create
+  #   logger.debug params.inspect
+  #   @recipe = Recipe.new(recipe_params)
+  #   if @recipe.save
+  #     redirect_to @recipe, notice: 'Recipe was successfully created.'
+  #   else
+  #     logger.debug(@recipe.errors.full_messages)
+  #     render :new
+  #   end
+  # end
   def create
+    logger.debug params.inspect
     @recipe = Recipe.new(recipe_params)
-    @recipe.user = current_user # ログインユーザーをレシピに関連付け
-
+  
+    # 自分で実装した方法で現在のユーザーを取得
+    @recipe.user = User.find(session[:user_id]) if session[:user_id]
+  
     if @recipe.save
-      if @recipe.images.attached?
-        redirect_to @recipe, notice: t('recipes.create.success') # i18n対応
-      else
-        #flash.now[:alert] = t('recipes.create.no_image') # i18n対応
-        render :new
-      end
+      redirect_to @recipe, notice: 'Recipe was successfully created.'
     else
-      flash.now[:alert] = @recipe.errors.full_messages.join(", ")  # エラーメッセージをフラッシュメッセージに設定
+      logger.debug(@recipe.errors.full_messages)
       render :new
     end
   end
@@ -75,19 +85,10 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
-  # def recipe_params
-  #   params.require(:recipe).permit(:title, :description, images: [], quantities_attributes: [:id, :ingredient_name, :amount_with_unit, :_destroy])
-  # end
   def recipe_params
-    params.require(:recipe).permit(:title, :description, images: [], 
-      quantities_attributes: [:id, :ingredient_name, :amount_with_unit, :_destroy]).tap do |whitelisted|
-        whitelisted[:quantities_attributes]&.each do |key, attributes|
-          if attributes[:ingredient_name].blank? && attributes[:amount_with_unit].blank?
-            attributes[:_destroy] = '1'
-          end
-        end
-    end
+    params.require(:recipe).permit(:title, :description, images: [], quantities_attributes: [:id, :ingredient_name, :amount_with_unit, :_destroy])
   end
+
   def create_tags(ingredient_names)
     ingredient_names.each do |ingredient_name|
       tag = Tag.find_or_create_by(name: ingredient_name)

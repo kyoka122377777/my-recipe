@@ -1,10 +1,24 @@
 {
-  "application.js": "/packs/js/application-f4e4d96d26edd6abc074.js",
+  "application.js": "/packs/js/application-9dbf2300066e1493c7ec.js",
+  "application.js.map": "/packs/js/application-9dbf2300066e1493c7ec.js.map",
   "entrypoints": {
     "application": {
       "js": [
-        "/packs/js/application-f4e4d96d26edd6abc074.js"
+        "/packs/js/application-9dbf2300066e1493c7ec.js"
+      ],
+      "js.map": [
+        "/packs/js/application-9dbf2300066e1493c7ec.js.map"
+      ]
+    },
+    "recipe_form": {
+      "js": [
+        "/packs/js/recipe_form-7d29a6893d58cb1b23e9.js"
+      ],
+      "js.map": [
+        "/packs/js/recipe_form-7d29a6893d58cb1b23e9.js.map"
       ]
     }
-  }
+  },
+  "recipe_form.js": "/packs/js/recipe_form-7d29a6893d58cb1b23e9.js",
+  "recipe_form.js.map": "/packs/js/recipe_form-7d29a6893d58cb1b23e9.js.map"
 }

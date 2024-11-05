@@ -1,56 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+  <meta charset="UTF-8">
   <title>MyRecipe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
-  <%= javascript_include_tag 'application' %>
+
+  <!-- Bootstrap のスタイルシートを読み込み -->
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  
+  <!-- JavaScriptファイルを読み込み -->
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module' %>
+  
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <%= javascript_importmap_tags %>
 </head>
 <body>
   <!-- ヘッダー -->
-  <header class="header">
-    <h1 class="header-title">
-      <%= link_to image_tag("diary.png", alt: "シンボルマーク", class: "symbol-image"), current_user ? home_path : root_path %>
+  <header class="bg-light p-3 mb-4">
+    <h1 class="header-title d-flex align-items-center">
+      <%= link_to image_tag("diary.png", alt: "シンボルマーク", class: "symbol-image me-2"), current_user ? home_path : root_path %>
       my-recipe
     </h1>
 
     <div class="header-icons">
       <% if session[:user_id] %>
-        <%= link_to new_recipe_path, class: "icon-link" do %>
-          <i class="fa fa-plus"></i> <!-- プラスアイコン -->
+        <%= link_to new_recipe_path, class: "icon-link me-3" do %>
+          <i class="material-icons">add</i>
         <% end %>
         
-        <%= link_to account_path, class: "icon-link" do %>
-          <i class="fa fa-user"></i> <!-- ユーザーアイコン -->
+        <%= link_to account_path, class: "icon-link me-3" do %>
+          <i class="material-icons">person</i>
         <% end %>
         
-        <%= link_to t('logout'), logout_path, method: :delete, class: 'icon-link' %>
+        <%= link_to 'ログアウト', logout_path, class: 'btn btn-link text-decoration-none', data: { turbo_method: :delete } %>
       <% end %>
     </div>
 
     <div class="language-selector">
       <div class="dropdown">
-        <button class="dropbtn"><%= t('select_language') %></button>
-        <div class="dropdown-content">
-          <%= link_to t('languages.english'), url_for(locale: 'en'), class: "language-link" %>
-          <%= link_to t('languages.japanese'), url_for(locale: 'ja'), class: "language-link" %>
-        </div>
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <%= t('select_language') %>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+          <li><%= link_to t('languages.english'), url_for(locale: 'en'), class: "dropdown-item", data: { turbo: false } %></li>
+          <li><%= link_to t('languages.japanese'), url_for(locale: 'ja'), class: "dropdown-item", data: { turbo: false } %></li>
+        </ul>
       </div>
     </div>
-
+    
+        
   </header>
 
-  <!-- フラッシュメッセージの表示 -->
-  <div class="flash-messages">
-    <% flash.each do |type, message| %>
-      <div class="flash <%= type %>"><%= message %></div>
-    <% end %>
-  </div>
+  <!-- Turboの影響を考慮して変更フラッシュメッセージの表示 -->
+  <%= turbo_frame_tag "flash" do %>
+    <div class="flash-messages">
+      <% flash.each do |type, message| %>
+        <div class="flash alert alert-<%= type %>"><%= message %></div>
+      <% end %>
+    </div>
+  <% end %>
 
-  <main>
+  <main class="container">
     <%= yield %> <!-- メインコンテンツ -->
   </main>
+
+  <!-- BootstrapのJavaScriptを読み込む -->
+  <%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js', integrity: 'sha384-oBqDVmMz4fnFO9gybTXH2w5BICp4ZWAPuG8RSR6H1Z6Xc6tlhG7NTN4z4kRpLwW7', crossorigin: 'anonymous' %>
+  <%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js', integrity: 'sha384-2fDXY8MIPjzYG1AG4Ap6NTwPIc+v3ft5pe6w1WfkmHsktg2m/e3hJgRHpajEz+TT', crossorigin: 'anonymous' %>
 </body>
 </html>

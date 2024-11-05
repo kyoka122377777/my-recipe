@@ -1,18 +1,26 @@
-<h1>検索結果</h1>
+<div class="container">
+  <h1 class="my-4">検索結果</h1>
 
-<%= form_with url: search_recipes_path, method: :get, local: true do |form| %>
-  <%= form.text_field :query, placeholder: '検索...' %>
-  <%= form.submit '検索' %>
-<% end %>
+  <%= form_with url: search_recipes_path, method: :get, local: true do |form| %>
+    <div class="input-group mb-3">
+      <%= form.text_field :query, placeholder: '検索...', class: 'form-control' %>
+      <div class="input-group-append">
+        <%= form.submit '検索', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
 
-<% if @recipes.any? %>
-  <ul>
-    <% @recipes.each do |recipe| %>
-      <li>
-        <%= link_to recipe.title, recipe_path(recipe) %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>レシピが見つかりませんでした。</p>
-<% end %>
+  <% if @recipes.any? %>
+    <ul class="list-group">
+      <% @recipes.each do |recipe| %>
+        <li class="list-group-item">
+          <%= link_to recipe.title, recipe_path(recipe), class: 'link-primary' %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="alert alert-warning mt-3">
+      レシピが見つかりませんでした。
+    </div>
+  <% end %>
+</div>
