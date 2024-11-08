@@ -68,3 +68,5 @@ end
 gem 'sorcery'
 gem 'oauth', '~> 1.1'
 gem 'oauth2', '~> 2.0'
+
+gem 'mysql2', '~> 0.5'

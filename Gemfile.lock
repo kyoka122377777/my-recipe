@@ -166,6 +166,7 @@ GEM
     msgpack (1.7.3)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
+    mysql2 (0.5.6)
     net-http (0.5.0)
       uri
     net-imap (0.5.0)
@@ -386,6 +387,7 @@ DEPENDENCIES
   jbuilder
   jsbundling-rails
   kamal
+  mysql2 (~> 0.5)
   oauth (~> 1.1)
   oauth2 (~> 2.0)
   pg (~> 1.1)
