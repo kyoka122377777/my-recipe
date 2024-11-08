@@ -1,171 +1,31 @@
+# Files in the config/locales directory are used for internationalization and
+# are automatically loaded by Rails. If you want to use locales other than
+# English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t "hello"
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t("hello") %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more about the API, please read the Rails Internationalization guide
+# at https://guides.rubyonrails.org/i18n.html.
+#
+# Be aware that YAML interprets the following case-insensitive strings as
+# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
+# must be quoted to be interpreted as strings. For example:
+#
+#     en:
+#       "yes": yup
+#       enabled: "ON"
+
 en:
-  activerecord:
-    errors:
-      models:
-        user:
-          attributes:
-            email:
-              blank: "Please enter your email address"
-              taken: "This email address is already taken"
-            password_confirmation:
-              confirmation: "Password confirmation does not match"
-        recipe:
-          attributes:
-            title:
-              blank: "Please enter a title" # Error message for empty title
-            description:
-              blank: "Please enter a description"
-
-  errors:
-    messages:
-      blank: "This field is required"
-      confirmation: "Does not match"
-      taken: "Already taken"
-  
-  add_ingredient: "Add input field"
-  select_language: "Select language"
-  languages:
-    english: "English"
-    japanese: "Japanese"
-  login_success: "Login was successful"
-  recipes_title: "Your Recipe List"
-  no_recipes: "You have no recipes"
-  no_image: "No image available."
-  edit: "Edit"
-  delete: "Delete"
-  confirm_delete: "Are you sure you want to delete?"
-  back: "Back"
-  welcome:
-    title: "Welcome"
-    subtitle: "To your recipe management app"
-    new_user: "Sign Up"
-    login: "Login"
-    greeting: "Welcome, %{name}!"
-    welcome: "Welcome"
-    message: "Welcome, %{name}!"
-    title: "The concept of my-recipe is my favorite recipe notebook"
-    subtitle: "Why not plan meals from your favorite recipes?"
-  
-  recipe:
-    ingredients:
-      title: "Ingredients"
-    edit: "Edit"
-    delete: "Delete"
-    back: "Back"
-    confirm: "Are you sure you want to delete?"  
-      
-  recipes_title: "Your Recipe List"
-  no_recipes: "You have no recipes"
-  no_image: "No image available."
-  edit: "Edit"
-  delete: "Delete"
-  confirm_delete: "Are you sure you want to delete?"
-  back: "Back"
-  language_selector: "Select language"
-  sessions:
-    
-    destroy:
-      success: "You have logged out successfully"
-  logout:
-    confirm: "Are you sure you want to log out?"
-    success: "You have logged out!"
-
-  recipes:
-    edit: "Edit"
-    delete:
-    confirm_delete: "Are you sure you want to delete?"
-    back: "Back"
-    title: "Your Recipe List"
-    no_recipes: "You have no recipes"
-    create:
-      success: "Recipe has been created."
-      no_image: "No image attached"
-    update:
-      success: "Recipe has been updated."
-    destroy:
-      success: "Recipe has been deleted."
-    recipe_images:
-      title: "Images"
-      no_images: "No images available"
-    ingredients:
-      title: "Ingredients"
-    recipe:
-      no_ingredients: "No ingredients available"
-      edit:
-        title: "Title"
-    edit:
-      title: "Title"
-      description: "Instructions"
-      ingredient_name: "Ingredient name"
-      amount_with_unit: "Amount"
-      update: "Update"
-      cancel: "Cancel"
-
-  update: "Update?"
-  cancel: "Cancel?"
-  title: "Title"
-  description: "Instructions"
-  ingredient_name: "Ingredient name"
-  amount_with_unit: "Amount"
-  recipe_images: "Attach images"
-  post: "Post"
-
-  errors:
-    prohibited: "Saving failed due to %{count} errors:"
-
-  edit: "Edit"
-  delete: "Delete"
-  confirm_delete: "Are you sure you want to delete?"
-  back: "Back"
-  language_selector: "Select language"
-
-  session:
-    email: "Email address"
-    password: "Password"
-    submit: "Login"
-  sessions:
-    create:
-      invalid_credentials: "Invalid email address or password"
-      success: "Login was successful."
-    destroy:
-      success: "You have logged out"
-  shared:
-    error_message:
-      count: "Error"
-      prohibited: "This resource was prevented from being saved"
-
-  users:
-    edit:
-      title: "Edit Account"
-      heading: "Edit Account"
-      name: "Name"
-      email: "Email address"
-      password: "Password"
-      password_placeholder: "New password"
-      password_confirmation: "New password (confirmation)"
-      password_confirmation_placeholder: "New password (confirmation)"
-      submit: "Update"
-      cancel: "Cancel"
-    shared:
-      error_message:
-        count: "Error"
-        prohibited: "This resource was prevented from being saved"
-    new:
-      title: "Sign Up"
-      name: "Account Name"
-      email: "Email address"
-      password: "Password"
-      password_confirmation: "Password confirmation"
-      submit: "Register"
-    
-    show:
-      title: "Account Management"
-      heading: "Account"
-      name: "Name"
-      email: "Email address"
-      password: "Password"
-      edit: "Edit"
-      logout: "Logout"
-
-  logout: "Logout"
-
+  hello: "Hello world"

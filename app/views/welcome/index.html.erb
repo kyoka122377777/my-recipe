@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+  <meta charset="UTF-8">
   <title><%= t('welcome.title') %></title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <!-- Bootstrap CSS を読み込み -->
+
+  
+  <!-- 必要なJSファイルを読み込み -->
   <%= javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module' %>
+  
+  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <%= javascript_importmap_tags %>
 </head>
 <body>
   <main class="container text-center mt-5">
@@ -21,8 +26,8 @@
       </div>
     </div>
 
+    <!-- トップページ画像 -->
     <%= image_tag "top.png", alt: "welcomeイメージ", class: 'top-image img-fluid mt-4' %>
-
   </main>
 </body>
 </html>
