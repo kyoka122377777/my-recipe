@@ -70,3 +70,5 @@ gem 'oauth2', '~> 2.0'
 
 ##画像のリサイズや最適化
 gem 'mini_magick'
+
+gem 'mysql2', '>= 0.5'
