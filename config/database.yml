@@ -100,4 +100,7 @@ test:
 #     migrations_paths: db/cable_migrate
 production:
   <<: *default
+  database: my_recipe_production
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
   url: <%= ENV["DATABASE_URL"] %>

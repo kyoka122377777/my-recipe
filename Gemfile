@@ -72,3 +72,6 @@ gem 'oauth2', '~> 2.0'
 gem 'mini_magick'
 
 gem 'mysql2', '>= 0.5'
+
+##.env ファイルを扱うために
+gem 'dotenv-rails', groups: [:development, :test]
