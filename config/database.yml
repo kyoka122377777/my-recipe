@@ -10,14 +10,19 @@ default: &default
 development:
   <<: *default
   database: <%= ENV['DATABASE_NAME'] %>_development
+  username: root
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: db
+  port: 3306 
 
 test:
   <<: *default
   database: <%= ENV['DATABASE_NAME'] %>_test
 
 production:
-  <<: *default
-  url: <%= ENV['DATABASE_URL'] %>  # URLで接続設定を取得
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  charset: utf8mb4
-  collation: utf8mb4_unicode_ci
+  primary:
+    <<: *default
+    database: my_production_db
+  queue:
+    <<: *default
+    database: queue_production_db
