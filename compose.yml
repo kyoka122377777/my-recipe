@@ -4,10 +4,8 @@ services:
     restart: always
     environment:
       TZ: Asia/Tokyo
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD} 
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
-      
-      
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -31,13 +29,26 @@ services:
       - node_modules:/myapp/node_modules
     environment:
       TZ: Asia/Tokyo
+      REDIS_URL: redis://redis:6379/0  # Redis接続のURL設定
     ports:
       - "3000:3000"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started  # Redisが開始されるのを待つ
     env_file:
       - .env
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   bundle_data:
