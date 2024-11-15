@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title><%= t('welcome.title') %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  
+  <!-- Bootstrap CSS を読み込み -->
+  
+  
+  <!-- 必要なJSファイルを読み込み -->
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload', type: 'module' %>
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <main class="container text-center mt-5">
+    <div class="welcome-main">
+      <h1 class="welcome-text"><%= t('welcome.title') %></h1>
+      <p class="welcome-text"><%= t('welcome.subtitle') %></p>
+      <div class="button-container mt-4">
+        <%= link_to t('welcome.new_user'), new_user_path, class: "btn btn-primary me-2" %>
+        <%= link_to t('welcome.login'), login_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+
+    <!-- トップページ画像 -->
+    <%= image_tag "top.png", alt: "welcomeイメージ", class: 'top-image img-fluid mt-4' %>
+  </main>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<div class="container">
+  <h2 class="my-4">レシピ一覧</h2>
+
+  <%= form_with url: search_recipes_path, method: :get, local: true do |form| %>
+    <div class="mb-3">
+      <%= form.label :query, "検索", class: 'form-label' %>
+      <%= form.text_field :query, class: 'form-control', placeholder: 'レシピを検索...' %>
+    </div>
+    <div>
+      <%= form.submit "検索", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+  <% if @recipes.any? %>
+  <% @recipes.each do |recipe| %>
+    <div class="recipe-card mb-4">
+      <h5><%= recipe.title %></h5>
+      <p><%= recipe.description %></p>
+    </div>
+  <% end %>
+  <% else %>
+    <p>まだレシピが登録されていません。</p>
+  <% end %>
+</div>
