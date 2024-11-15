@@ -11,22 +11,14 @@
     </div>
   <% end %>
 
-  # <% if @recipes.any? %>
-  #   <% @recipes.each do |recipe| %>
-  #     <div class="recipe-card mb-4">
-  #       <h5>
-  #         <%= link_to recipe.title, recipe_path(recipe), class: 'text-decoration-none' %>
-  #       </h5>
-  #       <p><%= recipe.description %></p>
-        
-  #       <% if recipe.images.attached? %>
-  #         <%= image_tag recipe.images.first, style: "width: 100%; height: auto;" %>
-  #       <% else %>
-  #         <p>画像なし</p>
-  #       <% end %>
-  #     </div>
-  #   <% end %>
-  # <% else %>
-  #   <p>レシピがありません。</p>
-  # <% end %>
+  <% if @recipes.any? %>
+  <% @recipes.each do |recipe| %>
+    <div class="recipe-card mb-4">
+      <h5><%= recipe.title %></h5>
+      <p><%= recipe.description %></p>
+    </div>
+  <% end %>
+  <% else %>
+    <p>まだレシピが登録されていません。</p>
+  <% end %>
 </div>

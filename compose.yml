@@ -26,7 +26,7 @@ services:
     volumes:
       - .:/myapp
       - bundle_data:/usr/local/bundle:cached
-      - node_modules:/myapp/node_modules
+    # - node_modules:/myapp/node_modules 
     environment:
       TZ: Asia/Tokyo
       REDIS_URL: redis://redis:6379/0  # Redis接続のURL設定

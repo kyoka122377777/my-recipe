@@ -10,14 +10,15 @@ default: &default
 development:
   <<: *default
   database: <%= ENV['DATABASE_NAME'] %>_development
-  username: root
+  username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
-  host: db
-  port: 3306 
+  host: <%= ENV['DATABASE_HOST'] %>
+  port: <%= ENV['DATABASE_PORT'] %>
 
 test:
   <<: *default
   database: <%= ENV['DATABASE_NAME'] %>_test
+  host: db
 
 production:
   primary:
