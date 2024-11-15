@@ -23,3 +23,9 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
+  primary:
+    <<: *default
+    database: my_production_db
+  queue:
+    <<: *default
+    database: queue_production_db

@@ -1,17 +1,42 @@
 FROM ruby:3.2.3
+
+# 環境設定
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
+
+# 必要なパッケージをインストール
 RUN apt-get update -qq \
-&& apt-get install -y ca-certificates curl gnupg \
-&& mkdir -p /etc/apt/keyrings \
-&& curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-&& NODE_MAJOR=20 \
-&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
-&& wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs yarn vim
+  && apt-get install -y ca-certificates curl gnupg \
+  && mkdir -p /etc/apt/keyrings \
+  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+  && NODE_MAJOR=20 \
+  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+  && wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# 必要なパッケージをインストール（MySQLクライアントとビルドツール）
+RUN apt-get update -qq && apt-get install -y \
+  build-essential libpq-dev libmariadb-dev nodejs yarn vim \
+  && rm -rf /var/lib/apt/lists/*
+
+# 必要なNode.jsパッケージをインストール
 RUN yarn add esbuild nodemon
+
+# アプリケーションの作業ディレクトリを作成
 RUN mkdir /myapp
 WORKDIR /myapp
+
+# bundlerをインストール
 RUN gem install bundler
+
+# アプリケーションコードをコンテナにコピー
 COPY . /myapp
+
+# bundlerで依存関係をインストール
+RUN bundle install
+
+# 必要に応じて、静的アセットをプリコンパイル
+RUN bundle exec bootsnap precompile --gemfile
+
+# コンテナ起動時のデフォルトコマンド（例：rails server）
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]
