@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       redirect_to home_path, notice: "ユーザー登録が完了しました"
     else
       flash.now[:alert] = @user.errors.full_messages.join(", ")
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -24,27 +24,18 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
-  # def update
-  #   if current_user.update(user_params)
-  #     redirect_to account_path, notice: "プロフィールが更新されました"
-  #   else
-  #     flash.now[:alert] = "更新に失敗しました"
-  #     render :edit
-  #   end
-  # end
-
   def update
     @user = current_user
     if @user.update(user_params)
       redirect_to account_path, notice: "プロフィールが更新されました"
     else
       flash.now[:alert] = "更新に失敗しました"
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    session[:user_id] = nil  # セッションの削除（ログアウト）
+    session[:user_id] = nil
     redirect_to root_path, notice: "ログアウトしました"
   end
 
