@@ -4,8 +4,7 @@
     <title>my-recipe</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
 
@@ -22,20 +21,15 @@
         <% if current_user %>
           <%= link_to '<span class="material-icons">add</span>'.html_safe, new_recipe_path, style: 'text-decoration: none; color: black;' %>
           <%= link_to '<span class="material-icons">menu</span>'.html_safe, menu_path, style: 'text-decoration: none; color: black;' if current_user %>
-
         <% end %>
       </div>
-
-
     </header>
-    <!-- Turboの影響を考慮して変更フラッシュメッセージの表示 -->
-    <%= turbo_frame_tag "flash" do %>
-      <div class="flash-messages">
-        <% flash.each do |type, message| %>
-          <div class="flash alert alert-<%= type %>"><%= message %></div>
-        <% end %>
-      </div>
-    <% end %>
+
+    <div class="flash-messages">
+      <% flash.each do |type, message| %>
+        <div class="flash alert alert-<%= type %>"><%= message %></div>
+      <% end %>
+    </div>
 
     <main style="padding: 20px;">
       <%= yield %>
