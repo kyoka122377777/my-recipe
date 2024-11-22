@@ -57,7 +57,7 @@ group :test do
 end
 
 gem 'railties'
-gem 'zeitwerk', '~> 2.6.12'
+gem 'zeitwerk', '~> 2.7.1'
 
 gem 'sorcery'
 gem 'oauth', '~> 1.1'
