@@ -16,33 +16,32 @@ class RecipesController < ApplicationController
 
   def new
     @recipe = Recipe.new
-    10.times { @recipe.quantities.build }
   end
 
   def create
     @recipe = current_user.recipes.new(recipe_params)
   
     if @recipe.save
-      # 材料の処理
       if params[:recipe][:ingredients].present?
         ingredients = params[:recipe][:ingredients]
         amounts = params[:recipe][:amounts]
-  
+        
+        # quantitiesの保存を先に行う
         ingredients.each_with_index do |ingredient_name, index|
           next if ingredient_name.blank?
-  
-          tag = Tag.find_or_create_by(name: ingredient_name.strip)
-          @recipe.recipe_tags.find_or_create_by(tag: tag)
-  
-          # 分量の保存
+    
           amount = amounts[index]
           @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+          
+          # タグを作成
+          tag = Tag.find_or_create_by(name: ingredient_name.strip)
+          @recipe.recipe_tags.find_or_create_by(tag: tag)
         end
       end
-  
-      redirect_to recipes_path, notice: "レシピを作成しました。"
+      Rails.logger.info "リダイレクト先: #{recipe_path(@recipe)}"
+      redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
     else
-      render :new, alert: "作成に失敗しました。"
+      render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
     end
   end
 

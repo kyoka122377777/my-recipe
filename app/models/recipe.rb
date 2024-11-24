@@ -15,7 +15,7 @@ class Recipe < ApplicationRecord
 
   # **コールバック**
   before_validation :remove_empty_quantities  # 空の材料を削除
-  after_commit :create_tags  # 材料名からタグを生成
+  after_save :create_tags
 
   # **バリデーション**
   validates :title, presence: true, length: { maximum: 50 }

@@ -1,16 +1,50 @@
-<h1><%= @recipe.title %></h1>
+<%= content_for :title, @recipe.title %>
 
-<p><%= @recipe.description %></p>
-
-<% if @recipe.images.attached? %>
-  <h3>レシピ画像</h3>
-  <div>
-    <% @recipe.images.each do |image| %>
-      <%= image_tag image, alt: "レシピ画像", class: "recipe-image" %>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+    <h1><%= @recipe.title %></h1>
+    <p><%= @recipe.description %></p>
+    
+    <% if @recipe.images.attached? %>
+      <h3>レシピ画像</h3>
+      <div>
+        <% @recipe.images.each do |image| %>
+          <%= image_tag image, alt: "レシピ画像", class: "recipe-image" %>
+        <% end %>
+      </div>
+    <% else %>
+      <p>画像はありません。?</p>
     <% end %>
+
+    <% if @recipe.nil? %>
+      <p>レシピが見つかりませんでした。</p>
+    <% else %>
+      <h1><%= @recipe.title %></h1>
+      <p><%= @recipe.description %></p>
+  
+      <% if @recipe.images.attached? %>
+        <h3>レシピ画像</h3>
+        <div>
+          <% @recipe.images.each do |image| %>
+            <%= image_tag image, alt: "レシピ画像", class: "recipe-image" %>
+          <% end %>
+        </div>
+      <% else %>
+        <p>画像はありません。</p>
+      <% end %>
+
+  <div class="mb-3">
+    <%= link_to 'レシピ一覧に戻る', home_path, class: 'btn btn-secondary' %>
   </div>
-<% else %>
-  <p>画像はありません。</p>
 <% end %>
 
-<%= link_to 'レシピ一覧に戻る', home_path %>
+    
+
+      <div class="mb-3">
+        <%= link_to 'レシピ一覧に戻る', home_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+  </div>
+</div>
+
