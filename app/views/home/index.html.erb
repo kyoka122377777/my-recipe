@@ -1,15 +1,14 @@
 <div class="container">
   <h2>my-recipe 一覧</h2>
 
-
-  <%= form_with url: recipes_path, method: :get, local: true do |form| %>
-    <div class="mb-3">
-      <%= form.label :search, "検索", class: 'form-label' %>
-      <%= form.text_field :search, class: 'form-control', placeholder: 'キーワードを入力...' %>
+  <%= form_with url: recipes_path, method: :get, local: true do %>
+    <div>
+      <%= text_field_tag :query, params[:query], placeholder: 'キーワードを入力...' %>
+      <%= submit_tag "検索" %>
     </div>
-    <%= form.submit "検索", class: "btn btn-primary" %>
   <% end %>
-
+  
+  
 <% if @recipes.any? %>
   <ul>
     <% @recipes.each do |recipe| %>

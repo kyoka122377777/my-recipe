@@ -3,12 +3,13 @@ class RecipesController < ApplicationController
 
   def index
     if params[:query].present?
-      @recipes = Recipe.joins(:quantities)
-                       .where("recipes.title ILIKE ? OR quantities.ingredient_name ILIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
-                       .distinct
+      @recipes = current_user.recipes
+                  .joins(:quantities, :tags)
+                  .where("recipes.title ILIKE ? OR quantities.ingredient_name ILIKE ? OR tags.name ILIKE ?", 
+                         "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
+                  .distinct
     else
-      #@recipes = current_user.recipes
-      @recipes = [] 
+      @recipes = current_user.recipes
     end
   end
   
@@ -20,11 +21,28 @@ class RecipesController < ApplicationController
 
   def create
     @recipe = current_user.recipes.new(recipe_params)
+  
     if @recipe.save
-      redirect_to recipe_path(@recipe), notice: "レシピを作成しました"
+      # 材料の処理
+      if params[:recipe][:ingredients].present?
+        ingredients = params[:recipe][:ingredients]
+        amounts = params[:recipe][:amounts]
+  
+        ingredients.each_with_index do |ingredient_name, index|
+          next if ingredient_name.blank?
+  
+          tag = Tag.find_or_create_by(name: ingredient_name.strip)
+          @recipe.recipe_tags.find_or_create_by(tag: tag)
+  
+          # 分量の保存
+          amount = amounts[index]
+          @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+        end
+      end
+  
+      redirect_to recipes_path, notice: "レシピを作成しました。"
     else
-      flash.now[:alert] = "エラーが発生しました"
-      render :new
+      render :new, alert: "作成に失敗しました。"
     end
   end
 
@@ -36,33 +54,29 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
-  def search
-    if params[:query].present?
-      @recipes = current_user.recipes.joins(:quantities)
-                      .where("recipes.title ILIKE ? OR quantities.ingredient_name ILIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
-                      .distinct
-      render :index # index ビューをレンダリング
-    else
-      redirect_to home_path # クエリが空の場合はホームにリダイレクト
-    end
-  end
+  # def search
+  #   if params[:query].present?
+  #     @recipes = current_user.recipes.joins(:quantities)
+  #                     .where("recipes.title ILIKE ? OR quantities.ingredient_name ILIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
+  #                     .distinct
+  #     render :index # index ビューをレンダリング
+  #   else
+  #     redirect_to home_path # クエリが空の場合はホームにリダイレクト
+  #   end
+  # end
   
   private
-
-  def set_recipe
-    @recipe = Recipe.find(params[:id])
-  end
 
   def recipe_params
     params.require(:recipe).permit(:title, :description, images: [], quantities_attributes: [:id, :ingredient_name, :amount, :_destroy])
   end
 
-  def create_tags(ingredient_names)
-    ingredient_names.each do |ingredient_name|
-      tag = Tag.find_or_create_by(name: ingredient_name)
-      RecipeTag.create(recipe_id: @recipe.id, tag_id: tag.id)
-    end
-  end
+  # def create_tags(ingredient_names)
+  #   ingredient_names.each do |ingredient_name|
+  #     tag = Tag.find_or_create_by(name: ingredient_name)
+  #     RecipeTag.create(recipe_id: @recipe.id, tag_id: tag.id)
+  #   end
+  # end
 
   def require_login
     unless current_user

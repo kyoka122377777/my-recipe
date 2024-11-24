@@ -1,26 +1,31 @@
 class Recipe < ApplicationRecord
-  belongs_to :user  # ユーザーとの関連付け
-  has_many :quantities, dependent: :destroy, inverse_of: :recipe  # 材料（数量）の関連付け
-  accepts_nested_attributes_for :quantities, allow_destroy: true  # 材料の追加・削除を許可
-  has_many_attached :images  # 複数画像の添付
+  # **アソシエーション**
+  belongs_to :user
+  has_many :quantities, dependent: :destroy, inverse_of: :recipe
+  has_many :recipe_tags, dependent: :destroy
+  has_many :tags, through: :recipe_tags
+  has_many_attached :images
 
-  # ユーザーが所有するレシピを絞り込むスコープ
+  # **ネストされたフォームでの属性許可**
+  accepts_nested_attributes_for :quantities, allow_destroy: true
+  accepts_nested_attributes_for :recipe_tags
+
+  # **スコープ**
   scope :owned_by, ->(user) { where(user: user) }
 
-  before_save :remove_empty_quantities
+  # **コールバック**
+  before_validation :remove_empty_quantities  # 空の材料を削除
+  after_commit :create_tags  # 材料名からタグを生成
 
-
-  # バリデーション
-  validates :title, presence: true, length: { maximum: 50 }  # タイトルは必須、最大長は50文字
-  validates :description, presence: true  # 説明は必須
-  validates :user, presence: true  # ユーザーは必須
-
-  # 画像アップロードに関するバリデーション（必要に応じて）
-  validate :validate_image_count
+  # **バリデーション**
+  validates :title, presence: true, length: { maximum: 50 }
+  validates :description, presence: true
+  validates :user, presence: true
+  validate :validate_image_count  # 画像の検証
 
   private
 
-  # 空の材料入力欄を自動削除
+  # **空の材料入力欄を削除**
   def remove_empty_quantities
     quantities.each do |quantity|
       if quantity.ingredient_name.blank? && quantity.amount.blank?
@@ -29,7 +34,28 @@ class Recipe < ApplicationRecord
     end
   end
 
-  # 画像の数を検証（例えば、最大5枚まで）
+  # **材料名を基にタグを生成**
+  # quantitiesに依存しているため、事前にquantitiesが設定されている必要があります。
+  def create_tags
+    Rails.logger.info "create_tagsメソッド開始"
+
+    # quantitiesから名前を取得してタグに変換
+    quantities.each do |quantity|
+      next if quantity.ingredient_name.blank?
+
+      tag = Tag.find_or_create_by(name: quantity.ingredient_name.strip)
+      Rails.logger.info "生成/検索されたタグ: #{tag.name}"
+
+      unless self.tags.include?(tag)
+        self.tags << tag
+        Rails.logger.info "タグ #{tag.name} をレシピに関連付けました"
+      end
+    end
+    Rails.logger.info "create_tagsメソッド終了"
+  end
+
+  # **画像の数を検証**
+  # 必要に応じて画像の最大数を調整
   def validate_image_count
     if images.attached? && images.count > 5
       errors.add(:images, "は最大5枚まで添付できます")

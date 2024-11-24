@@ -1,43 +1,48 @@
-<%= form_with(model: @recipe, local: true, enctype: "multipart/form-data") do |form| %>
+<%= form_with(model: @recipe, local: true) do |form| %>
   <% if @recipe.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+    <div id="error_explanation">
       <ul>
-        <% @recipe.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
+      <% @recipe.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
       </ul>
     </div>
   <% end %>
 
+  <!-- タイトル -->
   <div class="mb-3">
     <%= form.label :title, "タイトル" %>
     <%= form.text_field :title, class: "form-control" %>
   </div>
 
+  <!-- 説明 -->
   <div class="mb-3">
-    <%= form.label :description, "作り方" %>
-    <%= form.text_area :description, class: "form-control", rows: 5 %>
+    <%= form.label :description, "説明" %>
+    <%= form.text_area :description, rows: 5, class: "form-control" %>
   </div>
 
-  <div id="quantities">
-    <% @recipe.quantities.each_with_index do |quantity, index| %>
-      <div>
-        <%= form.label "quantities[#{index}][ingredient_name]", "材料名" %>
-        <%= form.text_field "quantities[#{index}][ingredient_name]", value: quantity.ingredient_name %>
-      </div>
-      <div>
-        <%= form.label "quantities[#{index}][amount]", "量" %>
-        <%= form.text_field "quantities[#{index}][amount]", value: quantity.amount %>
+  <!-- 材料入力欄 -->
+  <div id="ingredients-container">
+    <% 5.times do |i| %>
+      <div class="ingredient-group">
+        <div class="mb-2">
+          <%= form.label "材料名#{i + 1}" %>
+          <%= text_field_tag "recipe[ingredients][]", nil, class: "form-control", placeholder: "例: 塩,砂糖" %>
+        </div>
+        <div class="mb-2">
+          <%= form.label "分量#{i + 1}" %>
+          <%= text_field_tag "recipe[amounts][]", nil, class: "form-control", placeholder: "例: 少々" %>
+        </div>
       </div>
     <% end %>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :images, "レシピ画像" %>
-    <%= form.file_field :images, multiple: true, accept: 'image/*', class: "form-control" %>
-  </div>
+  # <!-- 追加ボタン -->
+  # <div class="mb-3">
+  #   <button type="button" id="add-ingredient-btn" class="btn btn-secondary">+ 材料を追加</button>
+  # </div>
 
+  <!-- 投稿ボタン -->
   <div>
     <%= form.submit "投稿", class: "btn btn-primary" %>
   </div>
