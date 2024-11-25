@@ -3,7 +3,9 @@
   <div class="row">
     <div class="col-lg-8 offset-lg-2">
       <h1>レシピ作成</h1>
-      <%= form_with model: @recipe, local: true do |form| %>
+      
+      <%= form_with model: @recipe, local: true, turbo: false, html: { enctype: "multipart/form-data" } do |form| %>
+
         <% if @recipe.errors.any? %>
           <div id="error_explanation">
             <h2><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
@@ -27,20 +29,37 @@
           <%= form.text_area :description, rows: 5, class: "form-control" %>
         </div>
 
+        <!-- 項目フィールド -->
+        <div class="mb-3">
+          <label for="section-title">項目（例: 調味料、主材料など）</label>
+          <input type="text" id="section-title" class="form-control" placeholder="項目を入力してください">
+          <button type="button" id="add-section" class="btn btn-secondary mt-2">項目を追加</button>
+        </div>
+
         <!-- 材料入力欄 -->
         <div id="ingredients-container">
           <% 5.times do |i| %>
-            <div class="ingredient-group">
-              <div class="mb-2">
-                <%= form.label "材料名#{i + 1}" %>
-                <%= text_field_tag "recipe[ingredients][]", nil, class: "form-control", placeholder: "例: 塩,砂糖" %>
+            <%= form.fields_for :quantities, @recipe.quantities[i] || @recipe.quantities.build do |quantity_form| %>
+              <div class="ingredient-group">
+                <div class="mb-2">
+                  <%= quantity_form.label :ingredient_name, "材料名#{i + 1}" %>
+                  <%= quantity_form.text_field :ingredient_name, class: "form-control", placeholder: "例: 塩,砂糖" %>
+                </div>
+                <div class="mb-2">
+                  <%= quantity_form.label :amount, "分量#{i + 1}" %>
+                  <%= quantity_form.text_field :amount, class: "form-control", placeholder: "例: 少々" %>
+                </div>
               </div>
-              <div class="mb-2">
-                <%= form.label "分量#{i + 1}" %>
-                <%= text_field_tag "recipe[amounts][]", nil, class: "form-control", placeholder: "例: 少々" %>
-              </div>
-            </div>
+            <% end %>
           <% end %>
+          <button type="button" id="add-ingredient" class="btn btn-primary mt-3">材料を追加</button>
+        </div>
+
+        
+        <!-- 複数画像アップロードフォーム -->
+        <div class="mb-3">
+          <%= form.label :images, "レシピ画像" %>
+          <%= form.file_field :images, multiple: true %> <!-- 画像を複数選択 -->
         </div>
 
         <!-- 投稿ボタン -->

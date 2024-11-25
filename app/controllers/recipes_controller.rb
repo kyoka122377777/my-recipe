@@ -18,33 +18,73 @@ class RecipesController < ApplicationController
     @recipe = Recipe.new
   end
 
+  #def create
+  #   @recipe = current_user.recipes.new(recipe_params)
+  
+  #   if @recipe.save
+  #     if params[:recipe][:ingredients].present?
+  #       ingredients = params[:recipe][:ingredients]
+  #       amounts = params[:recipe][:amounts]
+        
+  #       # quantitiesの保存を先に行う
+  #       ingredients.each_with_index do |ingredient_name, index|
+  #         next if ingredient_name.blank?
+    
+  #         amount = amounts[index]
+  #         @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+          
+  #         # タグを作成
+  #         tag = Tag.find_or_create_by(name: ingredient_name.strip)
+  #         @recipe.recipe_tags.find_or_create_by(tag: tag)
+  #       end
+  #     end
+  #     Rails.logger.info "リダイレクト先: #{recipe_path(@recipe)}"
+  #     redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
+  #   else
+  #     render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
+  #   end
+  # end
   def create
     @recipe = current_user.recipes.new(recipe_params)
-  
+
+    # 画像がある場合、保存前に画像を添付
+    if params[:recipe][:images].present?
+      params[:recipe][:images].each do |image|
+        if image.is_a?(ActionDispatch::Http::UploadedFile)
+          # 画像がすでに添付されているか確認
+          unless @recipe.images.attachments.any? { |attached_image| attached_image.filename.to_s == image.original_filename }
+            @recipe.images.attach(image)
+          end
+        end
+      end
+    end
+
     if @recipe.save
+      # 画像添付後、レシピの情報を保存
       if params[:recipe][:ingredients].present?
         ingredients = params[:recipe][:ingredients]
         amounts = params[:recipe][:amounts]
-        
-        # quantitiesの保存を先に行う
         ingredients.each_with_index do |ingredient_name, index|
           next if ingredient_name.blank?
-    
+
           amount = amounts[index]
           @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
-          
+
           # タグを作成
           tag = Tag.find_or_create_by(name: ingredient_name.strip)
           @recipe.recipe_tags.find_or_create_by(tag: tag)
         end
       end
-      Rails.logger.info "リダイレクト先: #{recipe_path(@recipe)}"
+
       redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
     else
+      Rails.logger.error @recipe.errors.full_messages
       render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
     end
   end
 
+
+  
   def show
     @recipe = Recipe.find(params[:id])
   end

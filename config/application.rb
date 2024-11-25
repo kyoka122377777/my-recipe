@@ -23,5 +23,11 @@ module Myapp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    # デフォルトでアセットパイプラインを有効にする
+    config.assets.enabled = true
+
+    # プリコンパイル対象のアセットを追加する
+    config.assets.precompile += %w( application.js application.css )
+
   end
 end

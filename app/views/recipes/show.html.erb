@@ -1,50 +1,36 @@
-<%= content_for :title, @recipe.title %>
-
+<%= content_for :title, "#{@recipe.title} | My Recipe" %>
 <div class="container">
   <div class="row">
     <div class="col-lg-8 offset-lg-2">
-    <h1><%= @recipe.title %></h1>
-    <p><%= @recipe.description %></p>
-    
-    <% if @recipe.images.attached? %>
-      <h3>レシピ画像</h3>
-      <div>
-        <% @recipe.images.each do |image| %>
-          <%= image_tag image, alt: "レシピ画像", class: "recipe-image" %>
+      <!-- レシピタイトル -->
+      <h1><%= @recipe.title %></h1>
+
+      <!-- レシピ説明 -->
+      <p class="lead"><%= @recipe.description %></p>
+
+      <!-- レシピ画像 -->
+      <div class="mb-3">
+        <% if @recipe.images.attached? %>
+          <% @recipe.images.each do |image| %>
+            <%= image_tag image, class: "img-fluid" %> <!-- 添付された画像をすべて表示 -->
+          <% end %>
+        <% else %>
+          <%= image_tag "no-image.png" %>
         <% end %>
       </div>
-    <% else %>
-      <p>画像はありません。?</p>
-    <% end %>
 
-    <% if @recipe.nil? %>
-      <p>レシピが見つかりませんでした。</p>
-    <% else %>
-      <h1><%= @recipe.title %></h1>
-      <p><%= @recipe.description %></p>
-  
-      <% if @recipe.images.attached? %>
-        <h3>レシピ画像</h3>
-        <div>
-          <% @recipe.images.each do |image| %>
-            <%= image_tag image, alt: "レシピ画像", class: "recipe-image" %>
-          <% end %>
-        </div>
-      <% else %>
-        <p>画像はありません。</p>
-      <% end %>
-
-  <div class="mb-3">
-    <%= link_to 'レシピ一覧に戻る', home_path, class: 'btn btn-secondary' %>
-  </div>
-<% end %>
-
-    
-
-      <div class="mb-3">
-        <%= link_to 'レシピ一覧に戻る', home_path, class: 'btn btn-secondary' %>
-      </div>
+      <!-- 材料一覧 -->
+      <h3>材料</h3>
+      <ul>
+        <% @recipe.quantities.each_with_index do |quantity, index| %>
+          <li>
+            <%= quantity.ingredient_name %>: <%= quantity.amount %>
+          </li>
+        <% end %>
+      </ul>
+      <!-- 投稿日時 -->
+      <p><small>作成日: <%= @recipe.created_at.strftime("%Y年%m月%d日") %></small></p>
+      <!-- 編集ボタン -->
     </div>
   </div>
 </div>
-
