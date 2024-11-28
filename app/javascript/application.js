@@ -1,4 +1,13 @@
-import * as ActiveStorage from "activestorage";  // 必要ならActiveStorageもインポート
+// Rails UJSをインポート
+import Rails from "@rails/ujs";
+Rails.start();
 
-// 必要なコントローラーをインポート（Stimulusを使う場合）
+// ActiveStorageのインポート
+import * as ActiveStorage from "activestorage";
+ActiveStorage.start();
+
+// Stimulusコントローラーのインポート
 import "controllers";
+
+// 必要なJavaScriptファイルのインポート
+import "./recipes/form"; // 個別ファイルもインポートする

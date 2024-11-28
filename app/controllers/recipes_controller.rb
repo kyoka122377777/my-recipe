@@ -1,5 +1,7 @@
 class RecipesController < ApplicationController
-  before_action :require_login, only: [:new, :create, :show, :edit]
+  before_action :require_login, only: [:new, :create, :show, :edit, :update, :destroy]
+  before_action :set_recipe, only: [:show, :edit, :update, :destroy]
+  before_action :disable_cache, only: [:show]
 
   def index
     if params[:query].present?
@@ -18,32 +20,6 @@ class RecipesController < ApplicationController
     @recipe = Recipe.new
   end
 
-  #def create
-  #   @recipe = current_user.recipes.new(recipe_params)
-  
-  #   if @recipe.save
-  #     if params[:recipe][:ingredients].present?
-  #       ingredients = params[:recipe][:ingredients]
-  #       amounts = params[:recipe][:amounts]
-        
-  #       # quantitiesの保存を先に行う
-  #       ingredients.each_with_index do |ingredient_name, index|
-  #         next if ingredient_name.blank?
-    
-  #         amount = amounts[index]
-  #         @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
-          
-  #         # タグを作成
-  #         tag = Tag.find_or_create_by(name: ingredient_name.strip)
-  #         @recipe.recipe_tags.find_or_create_by(tag: tag)
-  #       end
-  #     end
-  #     Rails.logger.info "リダイレクト先: #{recipe_path(@recipe)}"
-  #     redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
-  #   else
-  #     render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
-  #   end
-  # end
   def create
     @recipe = current_user.recipes.new(recipe_params)
 
@@ -93,16 +69,26 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
-  # def search
-  #   if params[:query].present?
-  #     @recipes = current_user.recipes.joins(:quantities)
-  #                     .where("recipes.title ILIKE ? OR quantities.ingredient_name ILIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
-  #                     .distinct
-  #     render :index # index ビューをレンダリング
-  #   else
-  #     redirect_to home_path # クエリが空の場合はホームにリダイレクト
-  #   end
-  # end
+  def update
+    @recipe.assign_attributes(recipe_params)
+  
+    if @recipe.changed? || @recipe.valid?
+      @recipe.save
+      redirect_to home_path, notice: 'レシピが更新されました。'
+    else
+      flash.now[:alert] = '更新に失敗しました。'
+      render :edit
+    end
+  end
+  
+  def destroy
+    if @recipe.destroy
+      redirect_to home_path, notice: 'レシピが削除されました。', status: :see_other
+    else
+      redirect_to home_path, alert: '削除に失敗しました。'
+    end
+  end
+  
   
   private
 
@@ -110,12 +96,17 @@ class RecipesController < ApplicationController
     params.require(:recipe).permit(:title, :description, images: [], quantities_attributes: [:id, :ingredient_name, :amount, :_destroy])
   end
 
-  # def create_tags(ingredient_names)
-  #   ingredient_names.each do |ingredient_name|
-  #     tag = Tag.find_or_create_by(name: ingredient_name)
-  #     RecipeTag.create(recipe_id: @recipe.id, tag_id: tag.id)
-  #   end
-  # end
+  def set_recipe
+    @recipe = current_user.recipes.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to home_path, alert: 'レシピが見つかりません。'
+  end
+
+  def disable_cache
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
 
   def require_login
     unless current_user

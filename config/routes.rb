@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   resources :users, only: [:new, :create, :show, :edit, :update]
   get '/menu', to: 'menu#index', as: :menu
   resource :account, only: [:show, :edit, :update], controller: 'users'
-  resources :recipes, only: [:new, :create, :show, :index] do
+  resources :recipes, only: [:new, :create, :show, :index, :edit, :update, :destroy] do
     collection do
       get :search
     end
