@@ -10,6 +10,7 @@ module Myapp
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
+    config.active_record.primary_key = :uuid
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -23,5 +24,11 @@ module Myapp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    # デフォルトでアセットパイプラインを有効にする
+    config.assets.enabled = true
+
+    # プリコンパイル対象のアセットを追加する
+    config.assets.precompile += %w( application.js application.css )
+
   end
 end

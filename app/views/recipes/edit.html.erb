@@ -1,8 +1,8 @@
-<%= content_for :title, "レシピ作成 | My Recipe" %>
+<%= content_for :title, "レシピ編集 | My Recipe" %>
 <div class="container">
   <div class="row">
     <div class="col-lg-8 offset-lg-2">
-      <h1>レシピ作成</h1>
+      <h1>レシピ編集</h1>
       
       <%= form_with model: @recipe, local: true, turbo: false, html: { enctype: "multipart/form-data" } do |form| %>
 
@@ -38,8 +38,8 @@
 
         <!-- 材料入力欄 -->
         <div id="ingredients-container">
-          <% 5.times do |i| %>
-            <%= form.fields_for :quantities, @recipe.quantities[i] || @recipe.quantities.build do |quantity_form| %>
+          <% @recipe.quantities.each_with_index do |quantity, i| %>
+            <%= form.fields_for :quantities, quantity do |quantity_form| %>
               <div class="ingredient-group">
                 <div class="mb-2">
                   <%= quantity_form.label :ingredient_name, "材料名#{i + 1}" %>
@@ -55,18 +55,28 @@
           <button type="button" id="add-ingredient" class="btn btn-primary mt-3">材料を追加</button>
         </div>
 
-        
-        <!-- 複数画像アップロードフォーム -->
+        <!-- 既存の画像表示 -->
         <div class="mb-3">
-          <%= form.label :images, "レシピ画像" %>
-          <%= form.file_field :images, multiple: true %> <!-- 画像を複数選択 -->
+        <% @recipe.images.each do |attachment| %>
+          <div class="existing-image">
+            <% if attachment %> <!-- attachmentが存在するか確認 -->
+              <%= image_tag attachment.blob.variant(resize: "100x100") %> <!-- attachmentからblobを取得 -->
+            <% end %>
+            <%= form.check_box :remove_images, { multiple: true }, attachment.id, nil %>
+          </div>
+        <% end %>
+        
+
+
+          <%= form.file_field :images, multiple: true %> <!-- 新しい画像を選択 -->
         </div>
 
         <!-- 投稿ボタン -->
         <div>
-          <%= form.submit "投稿", class: "btn btn-primary" %>
+          <%= form.submit "更新", class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>
   </div>
 </div>
+

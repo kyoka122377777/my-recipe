@@ -11,13 +11,17 @@ Rails.application.routes.draw do
   resources :users, only: [:new, :create, :show, :edit, :update]
   get '/menu', to: 'menu#index', as: :menu
   resource :account, only: [:show, :edit, :update], controller: 'users'
-  resources :recipes, only: [:new, :create, :show, :index] do
+  resources :recipes, only: [:new, :create, :show, :index, :edit, :update, :destroy] do
     collection do
       get :search
     end
   end
-  
 
+  # Google OAuth のログイン
+  get '/auth/:provider', to: 'sessions#auth_at_provider'
+  get '/auth/google/callback', to: 'sessions#google_auth'
+  # エラー時のルート
+  get '/auth/failure', to: 'sessions#auth_failure'
 
   # その他のルーティング
   get 'home/index', to: 'home#index', as: :home
