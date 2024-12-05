@@ -59,9 +59,12 @@ end
 gem 'railties'
 gem 'zeitwerk', '~> 2.6.12'
 
-gem 'sorcery'
-gem 'oauth', '~> 1.1'
-gem 'oauth2', '~> 2.0'
+gem 'sorcery', '~> 0.17.0'
+gem 'omniauth-google-oauth2'
+gem 'omniauth'
+
+
+
 ##.env ファイルを扱うために
 gem 'dotenv-rails', groups: [:development, :test]
 

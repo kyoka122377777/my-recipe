@@ -41,6 +41,20 @@ class UsersController < ApplicationController
     redirect_to root_path, notice: "ログアウトしました"
   end
 
+  # Google OAuthのコールバック用
+  def oauth
+    user = User.from_google(request.env["omniauth.auth"])
+    
+    if user.persisted?
+      # ログインしてユーザーをセッションに設定
+      session[:user_id] = user.id
+      redirect_to home_path, notice: "ログインしました！"
+    else
+      # ユーザーを新規作成
+      redirect_to new_user_path, alert: "Googleアカウントでのログインに失敗しました。"
+    end
+  end
+
   private
 
   def set_user
