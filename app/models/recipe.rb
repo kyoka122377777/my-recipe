@@ -6,6 +6,9 @@ class Recipe < ApplicationRecord
   has_many :tags, through: :recipe_tags
   has_many_attached :images
 
+  belongs_to :user, primary_key: 'uuid', foreign_key: 'user_uuid'
+  belongs_to :tag, primary_key: 'uuid', foreign_key: 'tag_uuid'
+
   # **ネストされたフォームでの属性許可**
   accepts_nested_attributes_for :quantities, allow_destroy: true
   accepts_nested_attributes_for :recipe_tags

@@ -59,9 +59,9 @@ end
 gem 'railties'
 gem 'zeitwerk', '~> 2.6.12'
 
-gem 'sorcery', '~> 0.17.0'
 gem 'omniauth-google-oauth2'
 gem 'omniauth'
+
 
 
 
@@ -69,3 +69,5 @@ gem 'omniauth'
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'aws-sdk-s3', require: false
+
+gem "sorcery", "~> 0.17.0"

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "oauths/oauth"
+  get "oauths/callback"
   # トップページのルーティング
   root 'welcome#index'
 
@@ -22,6 +24,11 @@ Rails.application.routes.draw do
   get '/auth/google/callback', to: 'sessions#google_auth'
   # エラー時のルート
   get '/auth/failure', to: 'sessions#auth_failure'
+  
+  post "oauth/callback" => "oauths#callback"
+  get "oauth/callback" => "oauths#callback"
+  get "oauth/:provider" => "oauths#oauth", as: :auth_at_provider
+
 
   # その他のルーティング
   get 'home/index', to: 'home#index', as: :home

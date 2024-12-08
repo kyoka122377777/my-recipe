@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_05_030417) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_06_064848) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -43,6 +43,15 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_030417) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "authentications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_authentications_on_provider_and_uid"
+  end
+
   create_table "quantities", force: :cascade do |t|
     t.bigint "recipe_id", null: false
     t.string "ingredient_name"
@@ -68,33 +77,37 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_05_030417) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id"], name: "index_recipes_on_user_id"
+    t.index ["uuid"], name: "index_recipes_on_uuid", unique: true
   end
 
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["uuid"], name: "index_tags_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
-    t.string "crypted_password", null: false
-    t.string "salt", null: false
-    t.string "username", null: false
+    t.string "crypted_password"
+    t.string "salt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.string "provider"
     t.string "uid"
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "quantities", "recipes"
-  add_foreign_key "recipe_tags", "recipes"
   add_foreign_key "recipe_tags", "tags"
   add_foreign_key "recipes", "users"
 end
