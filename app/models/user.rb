@@ -1,10 +1,10 @@
 class User < ApplicationRecord
   authenticates_with_sorcery!
-  has_many :recipes, dependent: :destroy
-  has_many :authentications, dependent: :destroy
-  accepts_nested_attributes_for :authentications
 
   self.primary_key = 'uuid'
+  has_many :recipes, dependent: :destroy, foreign_key: 'user_uuid'
+  has_many :authentications, dependent: :destroy
+  accepts_nested_attributes_for :authentications
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
@@ -28,7 +28,7 @@ class User < ApplicationRecord
   def self.from_google(auth)
     user = User.find_or_initialize_by(provider: auth.provider, uid: auth.uid)
     user.email = auth.info.email
-    user.username = auth.info.name
+    user.name = auth.info.name
     user.password = SecureRandom.hex(16) # パスワードが必要な場合は仮で設定
     user.save
     user

@@ -38,8 +38,8 @@
 
         <!-- 材料入力欄 -->
         <div id="ingredients-container">
-          <% 5.times do |i| %>
-            <%= form.fields_for :quantities, @recipe.quantities[i] || @recipe.quantities.build do |quantity_form| %>
+          <% @recipe.quantities.each_with_index do |quantity, i| %>
+            <%= form.fields_for :quantities, quantity do |quantity_form| %>
               <div class="ingredient-group">
                 <div class="mb-2">
                   <%= quantity_form.label :ingredient_name, "材料名#{i + 1}" %>

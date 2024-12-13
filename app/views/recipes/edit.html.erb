@@ -57,20 +57,51 @@
 
         <!-- 既存の画像表示 -->
         <div class="mb-3">
-        <% @recipe.images.each do |attachment| %>
-          <div class="existing-image">
-            <% if attachment %> <!-- attachmentが存在するか確認 -->
-              <%= image_tag attachment.blob.variant(resize: "100x100") %> <!-- attachmentからblobを取得 -->
+          <% if @recipe.images.attached? %>
+            <% @recipe.images.each do |image| %>
+              <div class="existing-image">
+                <% if image.persisted? && image.blob.image? %>
+                  <!-- 画像をリサイズして表示 -->
+                  <%= image_tag image.variant(resize: "50x50"), class: "img-fluid" %>
+                  <!-- signed_id を hidden_field として保持 -->
+                  <%= form.hidden_field :images, multiple: true, value: image.signed_id %>
+                <% else %>
+                  <p>添付ファイルは画像ではありません。</p>
+                <% end %>
+              </div>
             <% end %>
-            <%= form.check_box :remove_images, { multiple: true }, attachment.id, nil %>
-          </div>
-        <% end %>
-        
-
-
-          <%= form.file_field :images, multiple: true %> <!-- 新しい画像を選択 -->
+          <% else %>
+            <p>現在画像は添付されていません。</p>
+          <% end %>
+          <!-- 新しい画像を選択 -->
+          <%= form.label :images, "画像を追加" %>
+          <%= form.file_field :images, multiple: true, accept: 'image/jpeg,image/png' %>
+          #<%= form.file_field :images, multiple: true, class: "form-control mt-3" %>
         </div>
 
+        # <!-- 既存の画像表示 -->
+        # <div class="mb-3">
+        #   <% if @recipe.images.attached? %>
+        #     <% @recipe.images.each do |image| %>
+              
+        #       <% if image.persisted? && image.blob.image? %>
+        #         <div class="existing-image">
+        #           <!-- 画像をリサイズして表示 -->
+        #           <%= image_tag image.variant(resize: "50x50"), class: "img-fluid" %>
+        #         </div>
+        #       <% else %>
+        #         <p>添付ファイルは画像ではありません。</p>
+        #       <% end %>
+        #     <% end %>
+        #   <% else %>
+        #     <!-- 画像が添付されていない場合の表示 -->
+        #     <p>現在画像は添付されていません。</p>
+        #   <% end %>
+        #   <!-- 新しい画像を選択 -->
+        #   <%= form.file_field :images, multiple: true, class: "form-control mt-3" %>
+        # </div>
+
+       
         <!-- 投稿ボタン -->
         <div>
           <%= form.submit "更新", class: "btn btn-primary" %>

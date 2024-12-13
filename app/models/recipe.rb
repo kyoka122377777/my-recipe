@@ -1,13 +1,13 @@
 class Recipe < ApplicationRecord
   # **アソシエーション**
-  belongs_to :user
-  has_many :quantities, dependent: :destroy, inverse_of: :recipe
-  has_many :recipe_tags, dependent: :destroy
+  belongs_to :user, primary_key: 'uuid', foreign_key: 'user_uuid'
+  has_many :recipe_tags, primary_key: :uuid, foreign_key: :recipe_uuid
   has_many :tags, through: :recipe_tags
+  has_many :quantities, dependent: :destroy, inverse_of: :recipe
   has_many_attached :images
 
-  belongs_to :user, primary_key: 'uuid', foreign_key: 'user_uuid'
-  belongs_to :tag, primary_key: 'uuid', foreign_key: 'tag_uuid'
+  # uuidを主キーとして設定
+  self.primary_key = 'uuid'
 
   # **ネストされたフォームでの属性許可**
   accepts_nested_attributes_for :quantities, allow_destroy: true
@@ -25,6 +25,7 @@ class Recipe < ApplicationRecord
   validates :description, presence: true
   validates :user, presence: true
   validate :validate_image_count  # 画像の検証
+  validate :validate_image_format
 
   private
 
@@ -57,6 +58,15 @@ class Recipe < ApplicationRecord
     Rails.logger.info "create_tagsメソッド終了"
   end
 
+  def validate_image_format
+    # MIMEタイプが画像かどうかをチェック
+    images.each do |image|
+      unless image.content_type.start_with?('image/')
+        errors.add(:images, "は画像ファイルではありません。")
+      end
+    end
+  end
+
   # **画像の数を検証**
   # 必要に応じて画像の最大数を調整
   def validate_image_count
@@ -64,4 +74,5 @@ class Recipe < ApplicationRecord
       errors.add(:images, "は最大5枚まで添付できます")
     end
   end
+
 end

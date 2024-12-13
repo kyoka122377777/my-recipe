@@ -1,3 +1,4 @@
+
 <%= content_for :title, "#{@recipe.title} | My Recipe" %>
 <div class="container">
   <div class="row">
@@ -8,14 +9,20 @@
       <!-- レシピ説明 -->
       <p class="lead"><%= @recipe.description %></p>
 
-      <!-- レシピ画像 -->
-      <div class="mb-3">
+      <!-- レシピ画像 -->  
+      <div class="mb-4">
         <% if @recipe.images.attached? %>
-          <% @recipe.images.each do |image| %>
-            <%= image_tag image, class: "img-fluid" %> <!-- 添付された画像をすべて表示 -->
-          <% end %>
+          <div class="row">
+            <% @recipe.images.each do |image| %>
+              <div class="col-md-4 mb-3">
+                #<%= image_tag image, class: "img-fluid", style: "width: 50%; height: auto;" %>
+                <%= image_tag image.variant(resize_to_limit: [800, 800]), class: "img-fluid", style: "width: 50%; height: auto;" %>
+
+              </div>
+            <% end %>
+          </div>
         <% else %>
-          <%= image_tag "no-image.png" %>
+          <p class="text-muted"><%= t('recipe.images.no_images') %></p>
         <% end %>
       </div>
 
@@ -28,16 +35,13 @@
           </li>
         <% end %>
       </ul>
+
       <!-- 投稿日時 -->
       <p><small>作成日: <%= @recipe.created_at.strftime("%Y年%m月%d日") %></small></p>
+
       <!-- 編集ボタン -->
       <%= link_to "編集", edit_recipe_path(@recipe), class: "btn btn-primary" %>
       <%= link_to "削除", recipe_path(@recipe), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>
-      <%= link_to "削除", recipe_path(@recipe), method: :delete, data: { confirm: "本当に削除しますか？", turbo: false }, class: "btn btn-danger" %>
-
-
-
-
     </div>
   </div>
 </div>

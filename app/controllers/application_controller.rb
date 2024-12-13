@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    Rails.logger.debug "Session User ID: #{session[:user_id]}"  
     @current_user ||= User.find_by(uuid: session[:user_id])
   end
   helper_method :current_user

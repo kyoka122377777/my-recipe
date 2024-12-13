@@ -20,44 +20,87 @@ class RecipesController < ApplicationController
     @recipe = Recipe.new
   end
 
-  def create
-    @recipe = current_user.recipes.new(recipe_params)
+  # def create
+  #   @recipe = current_user.recipes.new(recipe_params.merge(user_uuid: current_user.uuid))
+  #   Rails.logger.debug params[:recipe][:images].inspect
 
-    # 画像がある場合、保存前に画像を添付
-    if params[:recipe][:images].present?
-      params[:recipe][:images].each do |image|
-        if image.is_a?(ActionDispatch::Http::UploadedFile)
-          # 画像がすでに添付されているか確認
-          unless @recipe.images.attachments.any? { |attached_image| attached_image.filename.to_s == image.original_filename }
-            @recipe.images.attach(image)
+  #   if params[:recipe][:images].present?
+  #     params[:recipe][:images].uniq.each do |image|
+  #       if image.is_a?(ActionDispatch::Http::UploadedFile)
+  #         @recipe.images.attach(image) unless @recipe.images.any? { |attached| attached.filename == image.original_filename }
+  #       elsif image.is_a?(String) # signed_id の場合
+  #         @recipe.images.attach(image) unless @recipe.images.attachments.map(&:signed_id).include?(image)
+  #       end
+  #     end
+  #   end
+  
+  #   if @recipe.save
+  #     # Ingredients and tags processing
+  #     if params[:recipe][:ingredients].present?
+  #       params[:recipe][:ingredients].each_with_index do |ingredient_name, index|
+  #         next if ingredient_name.blank?
+  
+  #         amount = params[:recipe][:amounts][index]
+  #         quantity = @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+  
+  #         # Tag creation
+  #         tag = Tag.find_or_create_by(name: ingredient_name.strip)
+  #         @recipe.recipe_tags.create(tag: tag)
+  #       end
+  #       redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
+  #     else
+  #       Rails.logger.error @recipe.errors.full_messages
+  #       render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
+  #     end
+  #   end
+  # end
+  def create
+    @recipe = current_user.recipes.new(recipe_params.merge(user_uuid: current_user.uuid))
+  
+    if @recipe.save
+      # 画像を添付（保存後に）
+      if params[:recipe][:images].present?
+        # imagesがnilでないように初期化
+        @recipe.images ||= []
+  
+        params[:recipe][:images].uniq.each do |image|
+          if image.is_a?(ActionDispatch::Http::UploadedFile)
+            # 重複チェック: 画像のファイル名が既に保存されていないか確認
+            unless @recipe.images.any? { |attached| attached.filename == image.original_filename }
+              @recipe.images.attach(image)
+            end
+          elsif image.is_a?(String) # signed_id の場合
+            # 重複チェック: signed_idで重複していないか確認
+            unless @recipe.images.attachments.any? { |attached| attached.signed_id == image }
+              @recipe.images.attach(image)
+            end
           end
         end
       end
-    end
-
-    if @recipe.save
-      # 画像添付後、レシピの情報を保存
+  
+      # Ingredients and tags processing
       if params[:recipe][:ingredients].present?
-        ingredients = params[:recipe][:ingredients]
-        amounts = params[:recipe][:amounts]
-        ingredients.each_with_index do |ingredient_name, index|
+        params[:recipe][:ingredients].each_with_index do |ingredient_name, index|
           next if ingredient_name.blank?
-
-          amount = amounts[index]
-          @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
-
-          # タグを作成
+  
+          amount = params[:recipe][:amounts][index]
+          quantity = @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+  
+          # Tag creation
           tag = Tag.find_or_create_by(name: ingredient_name.strip)
-          @recipe.recipe_tags.find_or_create_by(tag: tag)
+          @recipe.recipe_tags.create(tag: tag)
         end
+        redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
+      else
+        Rails.logger.error @recipe.errors.full_messages
+        render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
       end
-
-      redirect_to recipe_path(@recipe), notice: "レシピを作成しました。", status: :see_other
     else
       Rails.logger.error @recipe.errors.full_messages
-      render :new, alert: "作成に失敗しました。", status: :unprocessable_entity
+      render :new, alert: "レシピの保存に失敗しました。", status: :unprocessable_entity
     end
   end
+  
 
 
   
@@ -70,16 +113,32 @@ class RecipesController < ApplicationController
   end
 
   def update
-    @recipe.assign_attributes(recipe_params)
+    @recipe = current_user.recipes.find(params[:id])
+    Rails.logger.debug params[:recipe][:images].inspect
+
+    if @recipe.update(recipe_params)
+      # タグや画像の更新処理
+      if params[:recipe][:ingredients].present?
+        @recipe.quantities.destroy_all
+        params[:recipe][:ingredients].each_with_index do |ingredient_name, index|
+          next if ingredient_name.blank?
   
-    if @recipe.changed? || @recipe.valid?
-      @recipe.save
-      redirect_to home_path, notice: 'レシピが更新されました。'
+          amount = params[:recipe][:amounts][index]
+          @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+  
+          tag = Tag.find_or_create_by(name: ingredient_name.strip)
+          @recipe.recipe_tags.find_or_create_by(tag: tag)
+        end
+      end
+  
+      redirect_to recipe_path(@recipe), notice: "レシピを更新しました。", status: :see_other
     else
-      flash.now[:alert] = '更新に失敗しました。'
-      render :edit
+      render :edit, alert: "更新に失敗しました。", status: :unprocessable_entity
     end
   end
+  
+  
+  
   
   def destroy
     if @recipe.destroy
@@ -97,7 +156,8 @@ class RecipesController < ApplicationController
   end
 
   def set_recipe
-    @recipe = current_user.recipes.find(params[:id])
+    #@recipe = current_user.recipes.find(params[:id])
+    @recipe = current_user.recipes.find_by(uuid: params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to home_path, alert: 'レシピが見つかりません。'
   end
@@ -113,4 +173,24 @@ class RecipesController < ApplicationController
       redirect_to login_path, alert: "ログインが必要です"
     end
   end
+
+  # 画像添付後のレシピ情報を保存
+  def handle_ingredients_and_tags
+    if params[:recipe][:ingredients].present?
+      ingredients = params[:recipe][:ingredients]
+      amounts = params[:recipe][:amounts]
+      
+      ingredients.each_with_index do |ingredient_name, index|
+        next if ingredient_name.blank?
+
+        amount = amounts[index]
+        @recipe.quantities.create(ingredient_name: ingredient_name.strip, amount: amount)
+
+        # タグの作成
+        tag = Tag.find_or_create_by(name: ingredient_name.strip)
+        @recipe.recipe_tags.find_or_create_by(tag: tag)
+      end
+    end
+  end
 end
+

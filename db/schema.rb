@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_06_064848) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_08_085018) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -53,32 +53,31 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_06_064848) do
   end
 
   create_table "quantities", force: :cascade do |t|
-    t.bigint "recipe_id", null: false
     t.string "ingredient_name"
     t.decimal "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["recipe_id"], name: "index_quantities_on_recipe_id"
+    t.uuid "user_uuid", default: -> { "gen_random_uuid()" }, null: false
   end
 
   create_table "recipe_tags", force: :cascade do |t|
-    t.bigint "recipe_id", null: false
-    t.bigint "tag_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["recipe_id", "tag_id"], name: "index_recipe_tags_on_recipe_id_and_tag_id", unique: true
-    t.index ["recipe_id"], name: "index_recipe_tags_on_recipe_id"
-    t.index ["tag_id"], name: "index_recipe_tags_on_tag_id"
+    t.uuid "recipe_uuid", null: false
+    t.uuid "tag_uuid", null: false
+    t.index ["recipe_uuid", "tag_uuid"], name: "index_recipe_tags_on_recipe_uuid_and_tag_uuid", unique: true
+    t.index ["recipe_uuid"], name: "index_recipe_tags_on_recipe_uuid"
+    t.index ["tag_uuid"], name: "index_recipe_tags_on_tag_uuid"
   end
 
   create_table "recipes", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id"], name: "index_recipes_on_user_id"
+    t.uuid "user_uuid", null: false
+    t.index ["user_uuid"], name: "index_recipes_on_user_uuid"
     t.index ["uuid"], name: "index_recipes_on_uuid", unique: true
   end
 
@@ -107,7 +106,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_06_064848) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "quantities", "recipes"
-  add_foreign_key "recipe_tags", "tags"
-  add_foreign_key "recipes", "users"
+  add_foreign_key "recipe_tags", "recipes", column: "recipe_uuid", primary_key: "uuid"
+  add_foreign_key "recipe_tags", "tags", column: "tag_uuid", primary_key: "uuid"
 end
