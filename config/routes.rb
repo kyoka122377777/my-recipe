@@ -33,5 +33,8 @@ Rails.application.routes.draw do
   # その他のルーティング
   get 'home/index', to: 'home#index', as: :home
   get '/confirm_email', to: 'users#confirm_email', as: :confirm_email
+
+  get '/favicon.ico', to: proc { [204, {}, []] }
+
 end
 
