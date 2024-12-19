@@ -5,7 +5,11 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= favicon_link_tag 'favicon.ico' %>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
 
   <body>
@@ -25,11 +29,7 @@
       </div>
     </header>
 
-    <div class="flash-messages">
-      <% flash.each do |type, message| %>
-        <div class="flash alert alert-<%= type %>"><%= message %></div>
-      <% end %>
-    </div>
+    
 
     <main style="padding: 20px;">
       <%= yield %>

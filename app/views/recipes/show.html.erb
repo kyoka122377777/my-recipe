@@ -1,16 +1,47 @@
-<h1><%= @recipe.title %></h1>
 
-<p><%= @recipe.description %></p>
+<%= content_for :title, "#{@recipe.title} | My Recipe" %>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <!-- レシピタイトル -->
+      <h1><%= @recipe.title %></h1>
 
-<% if @recipe.images.attached? %>
-  <h3>レシピ画像</h3>
-  <div>
-    <% @recipe.images.each do |image| %>
-      <%= image_tag image, alt: "レシピ画像", class: "recipe-image" %>
-    <% end %>
+      <!-- レシピ説明 -->
+      <p class="lead"><%= @recipe.description %></p>
+
+      <!-- レシピ画像 -->  
+      <div class="mb-4">
+        <% if @recipe.images.attached? %>
+          <div class="row">
+            <% @recipe.images.each do |image| %>
+              <div class="col-md-4 mb-3">
+                #<%= image_tag image, class: "img-fluid", style: "width: 50%; height: auto;" %>
+                <%= image_tag image.variant(resize_to_limit: [800, 800]), class: "img-fluid", style: "width: 50%; height: auto;" %>
+
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted"><%= t('recipe.images.no_images') %></p>
+        <% end %>
+      </div>
+
+      <!-- 材料一覧 -->
+      <h3>材料</h3>
+      <ul>
+        <% @recipe.quantities.each_with_index do |quantity, index| %>
+          <li>
+            <%= quantity.ingredient_name %>: <%= quantity.amount %>
+          </li>
+        <% end %>
+      </ul>
+
+      <!-- 投稿日時 -->
+      <p><small>作成日: <%= @recipe.created_at.strftime("%Y年%m月%d日") %></small></p>
+
+      <!-- 編集ボタン -->
+      <%= link_to "編集", edit_recipe_path(@recipe), class: "btn btn-primary" %>
+      <%= link_to "削除", recipe_path(@recipe), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>
+    </div>
   </div>
-<% else %>
-  <p>画像はありません。</p>
-<% end %>
-
-<%= link_to 'レシピ一覧に戻る', home_path %>
+</div>
