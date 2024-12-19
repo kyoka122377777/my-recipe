@@ -66,4 +66,9 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
+
+  def omniauth_failure
+    redirect_to init_sign_in_users_path
+    #redirect wherever you want.
+  end
 end

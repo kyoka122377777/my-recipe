@@ -10,6 +10,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, confirmation: true, length: { minimum: 6 }, if: -> { new_record? || changes[:password] }
   validates :password_confirmation, presence: true, if: -> { new_record? || changes[:password] }
+  validates :remember_me_token, uniqueness: true, allow_nil: true
 
   def self.create_from_auth_hash(auth_hash)
     user = User.create(

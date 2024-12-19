@@ -4,19 +4,19 @@
 # Available submodules are: :user_activation, :http_basic_auth, :remember_me,
 # :reset_password, :session_timeout, :brute_force_protection, :activity_logging,
 # :magic_login, :external
-Rails.application.config.sorcery.submodules = [:external]
+Rails.application.config.sorcery.submodules = [:external, :remember_me]
 
 # Here you can configure each submodule's features.
 Rails.application.config.sorcery.configure do |config|
   # External サブモジュールを有効化
-  config.submodules = [:external]
+  #config.submodules = [:external, :remember_me]
 
   # -- external --
   config.external_providers = [:google]
   config.google.key = ENV['GOOGLE_CLIENT_ID']
   config.google.secret = ENV['GOOGLE_CLIENT_SECRET']
   config.google.callback_url = ENV['GOOGLE_CALLBACK_URL']
-
+  
   # Googleから取得するユーザー情報のマッピング
   config.google.user_info_mapping = { email: "email", username: "name" }
 
@@ -24,7 +24,11 @@ Rails.application.config.sorcery.configure do |config|
   config.user_config do |user|
     user.stretches = 1 if Rails.env.test?
     user.authentications_class = Authentication
+    user.remember_me_for = 180
   end
+  
+  
+  
 
   # 外部認証クラス設定
   # config.authentications_class = Authentication

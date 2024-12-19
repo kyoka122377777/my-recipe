@@ -20,14 +20,10 @@ Rails.application.routes.draw do
   end
 
   # Google OAuth のログイン
-  get '/auth/:provider', to: 'sessions#auth_at_provider'
-  get '/auth/google/callback', to: 'sessions#google_auth'
-  # エラー時のルート
-  get '/auth/failure', to: 'sessions#auth_failure'
-  
-  post "oauth/callback" => "oauths#callback"
-  get "oauth/callback" => "oauths#callback"
-  get "oauth/:provider" => "oauths#oauth", as: :auth_at_provider
+  get '/auth/google_oauth2/callback', to: 'sessions#create'
+  get '/auth/failure', to: redirect('/')
+
+  post "/oauth/callback"
 
 
   # その他のルーティング
