@@ -1,0 +1,113 @@
+<%= content_for :title, "レシピ編集 | My Recipe" %>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <h1>レシピ編集</h1>
+      
+      <%= form_with model: @recipe, local: true, turbo: false, html: { enctype: "multipart/form-data" } do |form| %>
+
+        <% if @recipe.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+            <ul>
+              <% @recipe.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- タイトル -->
+        <div class="mb-3">
+          <%= form.label :title, "タイトル" %>
+          <%= form.text_field :title, class: "form-control" %>
+        </div>
+
+        <!-- 説明 -->
+        <div class="mb-3">
+          <%= form.label :description, "説明" %>
+          <%= form.text_area :description, rows: 5, class: "form-control" %>
+        </div>
+
+        <!-- 項目フィールド -->
+        <div class="mb-3">
+          <label for="section-title">項目（例: 調味料、主材料など）</label>
+          <input type="text" id="section-title" class="form-control" placeholder="項目を入力してください">
+          <button type="button" id="add-section" class="btn btn-secondary mt-2">項目を追加</button>
+        </div>
+
+        <!-- 材料入力欄 -->
+        <div id="ingredients-container">
+          <% @recipe.quantities.each_with_index do |quantity, i| %>
+            <%= form.fields_for :quantities, quantity do |quantity_form| %>
+              <div class="ingredient-group">
+                <div class="mb-2">
+                  <%= quantity_form.label :ingredient_name, "材料名#{i + 1}" %>
+                  <%= quantity_form.text_field :ingredient_name, class: "form-control", placeholder: "例: 塩,砂糖" %>
+                </div>
+                <div class="mb-2">
+                  <%= quantity_form.label :amount, "分量#{i + 1}" %>
+                  <%= quantity_form.text_field :amount, class: "form-control", placeholder: "例: 少々" %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+          <button type="button" id="add-ingredient" class="btn btn-primary mt-3">材料を追加</button>
+        </div>
+
+        <!-- 既存の画像表示 -->
+        <div class="mb-3">
+          <% if @recipe.images.attached? %>
+            <% @recipe.images.each do |image| %>
+              <div class="existing-image">
+                <% if image.persisted? && image.blob.image? %>
+                  <!-- 画像をリサイズして表示 -->
+                  <%= image_tag image.variant(resize: "50x50"), class: "img-fluid" %>
+                  <!-- signed_id を hidden_field として保持 -->
+                  <%= form.hidden_field :images, multiple: true, value: image.signed_id %>
+                <% else %>
+                  <p>添付ファイルは画像ではありません。</p>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <p>現在画像は添付されていません。</p>
+          <% end %>
+          <!-- 新しい画像を選択 -->
+          <%= form.label :images, "画像を追加" %>
+          <%= form.file_field :images, multiple: true, accept: 'image/jpeg,image/png' %>
+          #<%= form.file_field :images, multiple: true, class: "form-control mt-3" %>
+        </div>
+
+        # <!-- 既存の画像表示 -->
+        # <div class="mb-3">
+        #   <% if @recipe.images.attached? %>
+        #     <% @recipe.images.each do |image| %>
+              
+        #       <% if image.persisted? && image.blob.image? %>
+        #         <div class="existing-image">
+        #           <!-- 画像をリサイズして表示 -->
+        #           <%= image_tag image.variant(resize: "50x50"), class: "img-fluid" %>
+        #         </div>
+        #       <% else %>
+        #         <p>添付ファイルは画像ではありません。</p>
+        #       <% end %>
+        #     <% end %>
+        #   <% else %>
+        #     <!-- 画像が添付されていない場合の表示 -->
+        #     <p>現在画像は添付されていません。</p>
+        #   <% end %>
+        #   <!-- 新しい画像を選択 -->
+        #   <%= form.file_field :images, multiple: true, class: "form-control mt-3" %>
+        # </div>
+
+       
+        <!-- 投稿ボタン -->
+        <div>
+          <%= form.submit "更新", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+

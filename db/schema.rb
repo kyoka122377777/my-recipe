@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_19_051525) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_20_020956) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -42,55 +43,75 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_19_051525) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "authentications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_authentications_on_provider_and_uid"
+  end
+
   create_table "quantities", force: :cascade do |t|
-    t.bigint "recipe_id", null: false
     t.string "ingredient_name"
     t.decimal "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["recipe_id"], name: "index_quantities_on_recipe_id"
+    t.uuid "user_uuid", default: -> { "gen_random_uuid()" }, null: false
   end
 
   create_table "recipe_tags", force: :cascade do |t|
-    t.bigint "recipe_id", null: false
-    t.bigint "tag_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["recipe_id", "tag_id"], name: "index_recipe_tags_on_recipe_id_and_tag_id", unique: true
-    t.index ["recipe_id"], name: "index_recipe_tags_on_recipe_id"
-    t.index ["tag_id"], name: "index_recipe_tags_on_tag_id"
+    t.uuid "recipe_uuid", null: false
+    t.uuid "tag_uuid", null: false
+    t.index ["recipe_uuid", "tag_uuid"], name: "index_recipe_tags_on_recipe_uuid_and_tag_uuid", unique: true
+    t.index ["recipe_uuid"], name: "index_recipe_tags_on_recipe_uuid"
+    t.index ["tag_uuid"], name: "index_recipe_tags_on_tag_uuid"
   end
 
   create_table "recipes", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_recipes_on_user_id"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "user_uuid", null: false
+    t.index ["user_uuid"], name: "index_recipes_on_user_uuid"
+    t.index ["uuid"], name: "index_recipes_on_uuid", unique: true
   end
 
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["uuid"], name: "index_tags_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
-    t.string "crypted_password", null: false
-    t.string "salt", null: false
-    t.string "username", null: false
+    t.string "crypted_password"
+    t.string "salt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.string "provider"
+    t.string "uid"
+    t.string "name"
+    t.string "remember_me_token"
+    t.datetime "remember_me_token_expires_at"
+    t.string "access_token"
+    t.string "refresh_token"
+    t.datetime "token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["remember_me_token"], name: "index_users_on_remember_me_token"
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "quantities", "recipes"
-  add_foreign_key "recipe_tags", "recipes"
-  add_foreign_key "recipe_tags", "tags"
-  add_foreign_key "recipes", "users"
+  add_foreign_key "recipe_tags", "recipes", column: "recipe_uuid", primary_key: "uuid"
+  add_foreign_key "recipe_tags", "tags", column: "tag_uuid", primary_key: "uuid"
 end
