@@ -74,3 +74,5 @@ gem 'aws-sdk-s3', require: false
 gem "sorcery", "~> 0.17.0"
 
 gem 'mini_magick'
+
+gem 'pry-rails'

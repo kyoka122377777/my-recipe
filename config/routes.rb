@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   get '/auth/failure', to: redirect('/')
 
   post "/oauth/callback"
+  get '/auth/:provider/callback', to: 'sessions#google_oauth2'
+  get '/auth/failure', to: 'sessions#new' # 認証失敗時のリダイレクト
+
 
 
   # その他のルーティング

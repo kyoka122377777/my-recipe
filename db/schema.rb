@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_13_080328) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_20_020956) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -102,6 +102,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_13_080328) do
     t.string "name"
     t.string "remember_me_token"
     t.datetime "remember_me_token_expires_at"
+    t.string "access_token"
+    t.string "refresh_token"
+    t.datetime "token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["remember_me_token"], name: "index_users_on_remember_me_token"
     t.index ["uuid"], name: "index_users_on_uuid", unique: true
